@@ -41,8 +41,18 @@
         </ul>
 
         <div class="header-icons">
-            <a href="carrinho.html"><i class='bx bx-user'></i></a>
-            <div class="bx bx-menu" id="menu-icon"></div>
+            <div class="icon-container">
+                <a href="{% url 'login' %}">
+                    <i class='bx bx-user-circle'></i>
+                </a>
+                <span>Login</span>
+            </div>
+            <div class="icon-container">
+                <a href="{% url 'register_client' %}">
+                    <i class='bx bx-user-plus'></i>
+                </a>
+                <span>Cadastro</span>
+            </div>
         </div>
     </header>
 
