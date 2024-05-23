@@ -12,13 +12,11 @@
     <link rel="shortcut icon" href="img/1.png" type="image/x-icon">
 
     <link rel="stylesheet" href="{% static 'cliente/css/style.css' %}"> 
-
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"rel="stylesheet">
 
 
     {% block 'head' %}
@@ -49,19 +47,11 @@
     </header>
 
     <!---HOME--->
-    <section class="home" id="home">
-        <div class="home-text">
-            <h1>Estetica Animal<br><span>LOVE PETS</span></h1>
-            <p>Onde o amor pelos animais encontra <br> praticidade e qualidade</p>
-            <a href="produtos.html" class="btn">Nossos Produtos</a>
-        </div>
-    </section>
-
-    {% block 'dashboard' %}
+    {% block 'home' %}
 
     {% endblock %}
-
     
+
     {% block 'body' %}
 
     {% endblock %}

@@ -88,7 +88,7 @@ section {
     padding: 100px 14%;
 }
 
-.home {
+.home_inicio {
     min-height: 100vh;
     width: 100%;
     background: url(../img/fundo_inicio.jpeg);
@@ -340,8 +340,10 @@ header.sticky {
 }
 
 .brand {
-    padding: 50px 14%;
+    padding: 200px 14%;
+    background: #ffd79c;
 }
+
 
 .brand-content {
     display: grid;
@@ -705,33 +707,169 @@ header.sticky {
     }
 }
 
-/* ----------------------- */
+/* --------------- */
 
-.container {
-    background-color: #fff;
+/* Estilo para o container principal */
+.login {
+    margin: 20px auto;
     padding: 20px;
+    max-width: 800px;
+    background-color: #5F2E73;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
 }
-.form-group {
-    margin-bottom: 15px;
+
+/* Estilo para o formulário */
+form {
+    margin-bottom: 20px;
 }
-.form-group label {
+
+label {
+    color: white;
     display: block;
+    font-weight: bold;
     margin-bottom: 5px;
 }
-.form-group input {
+
+.form-control {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
     box-sizing: border-box;
 }
-.form-group input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
 }
-.form-group input[type="submit"]:hover {
-    background-color: #45a049;
+
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* estilo para o messagebox */
+
+.alert-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+.alert-primary hr {
+    border-top-color: #9fcdff;
+}
+
+.alert-primary .alert-link {
+    color: #002752;
+}
+
+.alert-secondary {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+}
+
+.alert-secondary hr {
+    border-top-color: #c8cbcf;
+}
+
+.alert-secondary .alert-link {
+    color: #202326;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-success hr {
+    border-top-color: #b1dfbb;
+}
+
+.alert-success .alert-link {
+    color: #0b2e13;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-danger hr {
+    border-top-color: #f1b0b7;
+}
+
+.alert-danger .alert-link {
+    color: #491217;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-warning hr {
+    border-top-color: #ffe8a1;
+}
+
+.alert-warning .alert-link {
+    color: #533f03;
+}
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.alert-info hr {
+    border-top-color: #abdde5;
+}
+
+.alert-info .alert-link {
+    color: #062c33;
+}
+
+.alert-light {
+    color: #818182;
+    background-color: #fefefe;
+    border-color: #fdfdfe;
+}
+
+.alert-light hr {
+    border-top-color: #ececf6;
+}
+
+.alert-light .alert-link {
+    color: #686868;
+}
+
+.alert-dark {
+    color: #1b1e21;
+    background-color: #d6d8d9;
+    border-color: #c6c8ca;
+}
+
+.alert-dark hr {
+    border-top-color: #b9bbbe;
+}
+
+.alert-dark .alert-link {
+    color: #040505;
 }
