@@ -11,7 +11,7 @@
     <link rel="icon" href="img/1.png" type="image/x-icon">
     <link rel="shortcut icon" href="img/1.png" type="image/x-icon">
 
-    <link rel="stylesheet" type="text/css" href="./static/cliente/css/style.css">
+    <link rel="stylesheet" href="{% static 'cliente/css/style.css' %}"> 
 
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 
@@ -33,7 +33,7 @@
     <!---header--->
     <header>
         <div class="img-navlist">
-            <img src="./static/cliente/img/logo_nav_bar_2.png">
+            <img src="{% static 'cliente/img/logo_nav_bar_2.png' %}">
         </div>
         <a href="#" class="logo">Love Pets</a>
         <ul class="navlist">
@@ -56,6 +56,12 @@
             <a href="produtos.html" class="btn">Nossos Produtos</a>
         </div>
     </section>
+
+    {% block 'dashboard' %}
+
+    {% endblock %}
+
+    
     {% block 'body' %}
 
     {% endblock %}
@@ -113,7 +119,7 @@
     <script src="https://unpkg.com/scrollreveal"></script>
 
     <!---custom js link --->
-    <script src="./static/cliente/js/script.js"></script>
+    <script src="{% static 'cliente/js/script.js' %}"></script>
 
 </body>
 
