@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+
+<section class="brand"> 
+
+    {% if messages  %}
+    <br>
+        {% for message in messages %}
+            <div class="alert {{message.tags}}"> {{message}} </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <div class="login">
+        <form action="{% url 'agenda' %}" method="POST">{% csrf_token %}
+            <br>
+            <label>E-mail</label>
+            <input type="email" placeholder="Digite seu E-mail...." name="email" class="form-control">
+            <br>
+            <label>teste</label>
+            <input type="password" placeholder="Digite seu Senha...." name="Nome" class="form-control">
+            <br>
+            <input type="submit" class="btn-success">
+        </form>
+    </div>
+</section>
+
+{% endblock %}

@@ -12,6 +12,9 @@ def inicio(request):
 def login(request):
     return render(request, '../templates/login.html')
 
+def agenda(request):
+    return render(request, '../templates/agenda.html')
+
 
 def register_client(request):
     if request.method == "GET":        
