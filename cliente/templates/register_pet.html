@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+
+<section class="brand">   
+
+    {% if messages %}
+    <br>
+        {% for message in messages %}
+            <div class="alert {{message.tags}}"> {{message}} </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="login">
+        <form action="{% url 'register_pet' %}" method="POST">{% csrf_token %}
+            <br>
+            <label>Nome do Pet</label>
+            <input type="text" placeholder="Digite o nome do seu pet...." name="nome_pet" class="form-control">
+            <br>
+            <label>Raça</label>
+            <select name="raca" class="form-control">
+                <option value="Vira-lata">Vira-lata</option>
+                <option value="Shih Tzu">Shih Tzu</option>
+                <option value="Yorkshire">Yorkshire</option>
+                <option value="Poodle">Poodle</option>
+                <option value="Lhasa Apso">Lhasa Apso</option>
+                <option value="Buldogue francês">Buldogue francês</option>
+                <option value="Pinscher">Pinscher</option>
+                <option value="Golden Retriever">Golden Retriever</option>
+                <option value="Spitz Alemão">Spitz Alemão</option>
+                <option value="Maltês">Maltês</option>
+                <option value="Labrador Retriever">Labrador Retriever</option>
+                <option value="Pastor-alemão">Pastor-alemão</option>
+                <option value="Bulldog">Bulldog</option>
+                <option value="Beagle">Beagle</option>
+                <option value="Rottweiler">Rottweiler</option>
+                <option value="Braco alemão de pelo curto">Braco alemão</option>
+                <option value="Dachshund">Dachshund</option>
+                <option value="Outros">Outros</option>
+            </select>
+            <br>
+            <label>Tipo do pelo</label>
+            <select name="tipo_pelo" class="form-control">
+                <option value="True">Longo</option>
+                <option value="False">Curto</option>
+            </select>
+            <br>
+            <label>Porte</label>
+            <select name="porte" class="form-control">
+                <option value="P">Pequeno</option>
+                <option value="M">Medio</option>
+                <option value="G">Grande</option>
+            </select>
+            <br>
+            <br>
+            <input type="submit" class="btn-success">
+        </form>
+    </div>
+</section>
+
+{% endblock %}
