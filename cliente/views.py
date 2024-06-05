@@ -1,19 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Users
+from .models import Users, Animal
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 def inicio(request):
     return render(request, '../templates/inicio.html')
 
 def login(request):
     return render(request, '../templates/login.html')
-
-def agenda(request):
-    return render(request, '../templates/agenda.html')
 
 
 def register_client(request):
@@ -72,3 +70,28 @@ def logout(request):
     request.session.flush()
     messages.add_message(request, messages.WARNING, 'Logout efetuado com sucesso')
     return redirect(reverse('login'))
+
+
+@login_required
+def register_pet(request):
+    if request.method == "GET":
+        return render(request, 'register_pet.html')
+    elif request.method == "POST":
+        nome_pet = request.POST.get('nome')
+        raca = request.POST.get('raca')
+        tipo_pelo = request.POST.get('tipo_pelo')
+        porte = request.POST.get('porte')
+        id_cliente = request.user.id  # Obtém o ID do cliente logado
+
+        animal = Animal(
+            nome=nome_pet,
+            raca=raca,
+            tipo_pelo=tipo_pelo,
+            porte=porte,
+            id_client=id_cliente
+        )
+        
+        animal.save()
+
+        messages.add_message(request, messages.SUCCESS, 'Pet cadastrado com sucesso')
+        return render(request, 'inicio.html')

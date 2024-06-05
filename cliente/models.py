@@ -36,8 +36,7 @@ class Animal(models.Model):
     nome = models.CharField(max_length=50)
     raca = models.CharField(max_length=20)
     tipo_pelo = models.BooleanField(default=False)  # longo → True / curto → False
-    choice_porte = (('P', 'Pequeno'), ('M', 'Médio'), ('G', 'Grande'))
-    porte = models.CharField(max_length=1, choices=choice_porte)
+    porte = models.CharField(max_length=10  )
     id_client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     def __str__(self):
