@@ -43,16 +43,17 @@
 
         <div class="header-icons">
             <div class="icon-container">
-                <a href="{% url 'login' %}">
-                    <i class='bx bx-user-circle'></i>
-                </a>
-                <span>Login</span>
-            </div>
-            <div class="icon-container">
-                <a href="{% url 'register_client' %}">
-                    <i class='bx bx-user-plus'></i>
-                </a>
-                <span>Cadastro</span>
+                <div class="navlist">
+                    <a href="{% url 'login' %}">Entre
+                        <i class='bx bx-user-circle'></i>
+                    </a>
+                    <a href="{% url 'register_client' %}">Cadastro
+                        <i class='bx bx-user-plus'></i>
+                    </a>
+                    <a href="{% url 'logout' %}">Sair
+                        <i class='bx bxs-door-open'></i>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
