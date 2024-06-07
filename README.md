@@ -9,6 +9,7 @@ O projeto irá adotar as seguintes tecnologias:
 
 
 <h1 align="center">INSTALACAO</h1>
+
 git clone (key_project)
 
 python3 -m venv nome_do_ambiente_virual
