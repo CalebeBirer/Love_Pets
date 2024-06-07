@@ -5,10 +5,7 @@ class Users(AbstractUser):
     choices_cargo = (('W', 'Owner'), ('C', 'Client'))
     cargo = models.CharField(max_length=1, choices=choices_cargo)
 
-
 class Client(models.Model):
-    nome = models.CharField(max_length=20)
-    sobrenome = models.CharField(max_length=50)
     cpf = models.CharField(max_length=11)
     telefone = models.CharField(max_length=11)
     choices_sexo = (('M', 'Masculino'), ('F', 'Feminino'))
@@ -24,20 +21,23 @@ class Client(models.Model):
     )
     estado = models.CharField(max_length=2, choices=choices_estado, default='SP')
     bairro = models.CharField(max_length=30)
-    numero = models.CharField(max_length=6)  # Utilize CharField para preservar zeros à esquerda
+    numero = models.CharField(max_length=6)
     complemento = models.CharField(max_length=30, blank=True, null=True)
-    id_user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.OneToOneField(Users, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.nome
 
 
 class Animal(models.Model):
     nome = models.CharField(max_length=50)
-    raca = models.CharField(max_length=20)
-    tipo_pelo = models.BooleanField(default=False)  # longo → True / curto → False
-    porte = models.CharField(max_length=10  )
-    id_client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    raca = models.CharField(max_length=25)
+    choices_pelo = (('L', 'Longo'),
+                     ('C', 'Curto'))
+    tipo_pelo = models.CharField(max_length=1, choices=choices_pelo, default='C')
+    choices_porte = (('P', 'Pequeno'),
+                     ('M', 'Medio'),
+                     ('G', 'Grnade'))
+    porte = models.CharField(max_length=1, choices=choices_porte, default='P')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nome

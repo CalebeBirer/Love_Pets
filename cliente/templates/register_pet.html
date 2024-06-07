@@ -42,15 +42,16 @@
             <br>
             <label>Tipo do pelo</label>
             <select name="tipo_pelo" class="form-control">
-                <option value="True">Longo</option>
-                <option value="False">Curto</option>
+                {% for value, display in choices_pelo %}
+                    <option value="{{ value }}">{{ display }}</option>
+                {% endfor %}
             </select>
             <br>
             <label>Porte</label>
             <select name="porte" class="form-control">
-                <option value="P">Pequeno</option>
-                <option value="M">Medio</option>
-                <option value="G">Grande</option>
+                {% for value, display in choices_porte %}
+                    <option value="{{ value }}">{{ display }}</option>
+                {% endfor %}
             </select>
             <br>
             <br>

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+
+<section class="brand">   
+
+    {% if messages %}
+    <br>
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}"> {{ message }} </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="login">
+        <form action="{% url 'register_client_info' %}" method="POST">{% csrf_token %}
+            <br>
+            <label>CPF</label>
+            <input type="text" placeholder="Digite seu CPF...." name="cpf" class="form-control">
+            <br>
+            <label>Telefone</label>
+            <input type="text" placeholder="Digite seu Telefone...." name="telefone" class="form-control" maxlength="11">
+            <br>
+            <label>Sexo</label>
+            <select name="sexo" class="form-control">
+                {% for value, display in sexo_choices %}
+                    <option value="{{ value }}">{{ display }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label>CEP</label>
+            <input type="text" placeholder="Digite sua CEP...." name="cep" class="form-control">
+            <br>
+            <label>Cidade</label>
+            <input type="text" placeholder="Digite sua Cidade...." name="cidade" class="form-control">
+            <br>
+            <label>Estado</label>
+            <select name="estado" class="form-control">
+                {% for value, display in estados_choices %}
+                    <option value="{{ value }}">{{ display }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label>Bairro</label>
+            <input type="text" placeholder="Digite seu Bairro...." name="bairro" class="form-control">
+            <br>            
+            <label>Numero</label>
+            <input type="text" placeholder="Digite seu Numero...." name="numero" class="form-control" maxlength="10">
+            <br>            
+            <label>Complemento</label>
+            <input type="text" placeholder="Digite seu Complemento...." name="complemento" class="form-control" maxlength="10">
+            <br>
+            <input type="submit" class="btn-success">
+        </form>
+    </div>
+</section>
+
+{% endblock %}
