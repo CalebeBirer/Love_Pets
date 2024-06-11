@@ -18,11 +18,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"rel="stylesheet">
 
-
-    {% block 'head' %}
-
-    {% endblock %}
-
     <title>{% block 'title' %}{% endblock %}</title>
 </head>
 
@@ -35,14 +30,18 @@
         </div>
         <a href="#" class="logo">Love Pets</a>
         <ul class="navlist">
-            <li><a href="{% url 'inicio'%}">Home</a></li>
-            <li><a href="{% url 'criar_agenda'%}">Agenda</a></li>
-            <li><a href="{% url 'register_pet'%}">Pets</a></li>
-            {% if user.is_authenticated and user.cargo == 'W' %}
-                <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
+            <li><a href="{% url 'inicio' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'criar_agenda' %}">Agenda</a></li>
+                <li><a href="{% url 'register_pet' %}">Pets</a></li>
+                {% if user.cargo == 'W' %}
+                    <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{% url 'register_client' %}">Agenda</a></li>
+                <li><a href="{% url 'register_client' %}">Pets</a></li>
             {% endif %}
-            
-        </ul>
+        </ul>        
 
         <div class="header-icons">
             <div class="icon-container">

@@ -793,6 +793,12 @@ label {
     border-color: #c3e6cb;
 }
 
+.alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
 .alert-success hr {
     border-top-color: #b1dfbb;
 }

@@ -35,7 +35,7 @@ class Animal(models.Model):
     tipo_pelo = models.CharField(max_length=1, choices=choices_pelo, default='C')
     choices_porte = (('P', 'Pequeno'),
                      ('M', 'Medio'),
-                     ('G', 'Grnade'))
+                     ('G', 'Grande'))
     porte = models.CharField(max_length=1, choices=choices_porte, default='P')
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
