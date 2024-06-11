@@ -3,6 +3,7 @@
 
 {% block 'body' %}
 
+
 <section class="brand"> 
 
     {% if messages  %}
@@ -12,16 +13,41 @@
         {% endfor %}
     {% endif %}
 
-
     <div class="login">
-        <div class="login">
-            <form action="{% url 'agenda' %}" method="POST">{% csrf_token %}
-                {{ form.as_p }}
-                <br>
-                <input type="submit" class="btn btn-success" value="Salvar">
-            </form>
-        </div>
+        <form method="POST">{% csrf_token %}
+            <br>
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required class="form-control">
+            <br>
+
+            <label for="horario">Horário:</label>
+            <input type="time" id="horario" name="horario" required class="form-control">
+            <br>
+
+            <label for="observacao">Observação:</label>
+            <textarea id="observacao" name="observacao" class="form-control"></textarea>
+            <br>
+
+            <label for="id_animal">Animal:</label>
+            <select id="id_animal" name="id_animal" required class="form-control">
+                {% for animal in animais %}
+                <option value="{{ animal.id }}">{{ animal.nome }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="id_servico">Serviço:</label>
+            <select id="id_servico" name="id_servico" required class="form-control">
+                {% for servico in servicos %}
+                <option value="{{ servico.id }}">{{ servico.nome }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <button type="submit" class="btn-success">Agendar</button>
+        </form>
     </div>
+
 </section>
+
+
 
 {% endblock %}
