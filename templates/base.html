@@ -71,11 +71,37 @@
 
     {% endblock %}
 
+        <!-- -brand-
+        <section class="brand">
+            <div class="brand-content">
+                <div class="main">
+                    <a href="https://www.nespresso.com/br/pt/"><img src="img/Nespresso_logo.png"></a>
+                </div>
+                <div class="main">
+                    <a
+                        href="https://www.cafelor.com.br/?gclid=Cj0KCQjwxuCnBhDLARIsAB-cq1o_3-vV9EuC9I6Ut1pAzwQqugvz9kJRTKKlLTeq03gXJIfoVOrlMWYaAkcSEALw_wcB>"><img
+                            src="img/lor_logo.webp"></a>
+                </div>
+                <div class="main">
+                    <a href="https://www.starbucks.com.br"><img src="img/starbucks_logo.png"></a>
+                </div>
+                <div class="main">
+                    <a
+                        href="https://www.mercafe.com.br/?utm_source=bing&utm_medium=cpc&utm_campaign=bing_mer_institucional&msclkid=70095ae5fcaa1c8bd4f83e03e93ea8ca"><img
+                            src="img/tres_logo1.png"></a>
+                </div>
+                <div class="main">
+                    <a href="https://www.nescafe-dolcegusto.com.br"><img src="img/Dolce_gusto_logo.png.webp"></a>
+                </div>
+            </div>
+        </section>     -->
+
     <!---contact--->
     <section class="contact" id="contact">
         <div class="main-contact">
             <h3>Love Pets</h3>
-            <h5>Connect com a nosssa equipe</h5>
+            <h5>A Love Pets oferece um serviço de banho e tosa na porta da sua casa,<br> 
+                utilizando a sua água e energia para maior conveniência.</h5>
 
             <div class="icons">
                 <a href="https://w.app/LovePets"><i
@@ -88,33 +114,17 @@
         <div class="main-contact">
             <h3>Explore</h3>
             <ul class="Contact">
-                <li><a href="#">Home</a></li>
-                <li><a href="produtos.html">Cafeteiras</a></li>
-                <li><a href="produtos.html">Capsulas</a></li>
-                <li><a href="index.html">Novidades</a></li>
+                <li><a href="{% url 'inicio'%}">Home</a></li>
+                <li><a href="{% url 'criar_agenda'%}">Agenda</a></li>
+                <li><a href="{% url 'register_pet'%}"> Cadastre seu Pet</a></li>
             </ul>
         </div>
 
         <div class="main-contact">
             <h3>Nosso serviço</h3>
-            <li><a href="#">Café Expresso</a></li>
-            <li><a href="#">Café Americano</a></li>
-            <li><a href="#">Latte</a></li>
-        </div>
-
-        <div class="main-contact">
-            <h3>Cafeteiras</h3>
-            <li><a href="#">Cafeteira de Filtro</a></li>
-            <li><a href="#">Cafeteira de Aeropress</a></li>
-            <li><a href="#">Cafeteira de Espresso</a></li>
-        </div>
-
-        <div class="main-contact">
-            <h3>Capsulas</h3>
-            <li><a href="#">Café Expresso</a></li>
-            <li><a href="#">Café Longo ou Americano</a></li>
-            <li><a href="#">Café Forte ou Ristretto</a></li>
-            <li><a href="#">Café Descafeinado</a></li>
+            <li><a href="#">Banho</a></li>
+            <li><a href="#">Tosas</a></li>
+            <li><a href="#">hidratação</a></li>
         </div>
 
     </section>

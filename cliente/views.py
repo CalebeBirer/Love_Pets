@@ -64,6 +64,7 @@ def login(request):
         
         auth.login(request,user)
         messages.add_message(request, messages.SUCCESS, 'Usuario logado com Sucesso')
+        messages.add_message(request, messages.SUCCESS, 'Cadastre seu Pet na aba Pets')
         return redirect(reverse('login'))
     
 def logout(request):
