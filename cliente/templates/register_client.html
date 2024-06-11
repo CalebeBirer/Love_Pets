@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block 'head' %}
+{% endblock %}
 
 {% block 'body' %}
 
@@ -16,6 +18,7 @@
 
     <div class="login">
         <form action="{% url 'register_client' %}" method="POST">{% csrf_token %}
+            <label>CRIE SEU USUÁRIO!</label>
             <br>
             <label>Nome</label>
             <input type="text" placeholder="Digite seu Nome...." name="nome" class="form-control">
@@ -32,7 +35,7 @@
             <label>Confirme a senha</label>
             <input type="password" placeholder="Confirme a Senha...." name="confirma_senha" class="form-control">
             <br>
-            <input type="submit" class="btn-success">
+            <input type="submit" class="btn-success" value="Cadastrar">
         </form>
     </div>
 </section>

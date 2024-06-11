@@ -44,12 +44,13 @@ def register_client(request):
                                         cargo="C")
 
         messages.add_message(request, messages.SUCCESS, 'Usuario cadastrado com sucesso')
-        return redirect(reverse('register_client'))
+        return redirect(reverse('login'))
 
 def login(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             # redirect redireciona para a pagina desejada e o reverse tranforma o nome em um URL
+            messages.add_message(request, messages.ERROR, 'Usuario ja logado')
             return redirect(reverse('register_client')) 
         return render(request, 'login.html')
     elif request.method == "POST": 

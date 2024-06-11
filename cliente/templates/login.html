@@ -2,29 +2,28 @@
 {% load static %}
 
 {% block 'body' %}
-
 <section class="brand"> 
-
-    {% if messages  %}
-    <br>
-        {% for message in messages %}
-            <div class="alert {{message.tags}}"> {{message}} </div>
-        {% endfor %}
+    {% if messages %}
+        <div id="messages">
+            <br>
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
     {% endif %}
-
 
     <div class="login">
         <form action="{% url 'login' %}" method="POST">{% csrf_token %}
+            <label>ENTRE COM SEU USUÁRIO!</label>
             <br>
             <label>E-mail</label>
             <input type="email" placeholder="Digite seu E-mail...." name="email" class="form-control">
             <br>
             <label>Senha</label>
-            <input type="password" placeholder="Digite seu Senha...." name="senha" class="form-control">
+            <input type="password" placeholder="Digite sua Senha...." name="senha" class="form-control">
             <br>
-            <input type="submit" class="btn-success">
+            <input type="submit" class="btn btn-success" value="Entrar">
         </form>
     </div>
 </section>
-
 {% endblock %}
