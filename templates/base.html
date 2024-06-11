@@ -38,6 +38,9 @@
             <li><a href="{% url 'inicio'%}">Home</a></li>
             <li><a href="{% url 'criar_agenda'%}">Agenda</a></li>
             <li><a href="{% url 'register_pet'%}">Pets</a></li>
+            {% if user.is_authenticated and user.cargo == 'W' %}
+                <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
+            {% endif %}
             
         </ul>
 

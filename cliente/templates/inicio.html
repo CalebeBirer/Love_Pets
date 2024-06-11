@@ -3,6 +3,16 @@
 
 
 {% block 'home' %}
+
+    {% if messages %}
+    <br>
+        {% for message in messages %}
+            <section>
+            <div class="alert {{ message.tags }}"> {{ message }} </div>
+        </section>
+        {% endfor %}
+    {% endif %}
+
     <section class="home_inicio" id="home">
         <div class="home-text">
             <h1>Estetica Animal<br><span>LOVE PETS</span></h1>

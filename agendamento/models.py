@@ -4,6 +4,7 @@ from cliente.models import Users, Animal
 class Servico(models.Model):
     nome = models.CharField(max_length=30)
     descricao = models.CharField(max_length=150, blank=True, null=True)
+    duracao = models.DurationField()  # Novo campo para a duração do serviço
 
     def __str__(self):
         return self.nome

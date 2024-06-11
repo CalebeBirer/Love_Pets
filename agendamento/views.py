@@ -1,6 +1,8 @@
+from datetime import timedelta
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from datetime import datetime
 from django.contrib import messages
 from .models import Agendamento, Servico
 from cliente.models import Animal, Client
@@ -18,7 +20,24 @@ def agendar_servico(request):
             client = Client.objects.get(user=request.user)
             animal = Animal.objects.get(id=id_animal, client=client)
             servico = Servico.objects.get(id=id_servico)
-            
+            duracao = servico.duracao
+
+            # Calcular o horário de término
+            horario_inicio = datetime.combine(data, horario)
+            horario_fim = horario_inicio + duracao
+
+            # Verificar se o horário está disponível
+            agendamentos_existentes = Agendamento.objects.filter(
+                id_animal=animal,
+                data=data,
+                horario__lt=horario_fim,
+                horario__gt=horario_inicio - timedelta(seconds=1)
+            )
+
+            if agendamentos_existentes.exists():
+                messages.error(request, 'Já existe um agendamento para este horário.')
+                return redirect(reverse('agendar_servico'))
+
             agendamento = Agendamento(
                 data=data,
                 horario=horario,
@@ -30,8 +49,7 @@ def agendar_servico(request):
             )
             agendamento.save()
             messages.success(request, 'Serviço agendado com sucesso!')
-            return redirect(reverse('criar_agenda'))
-
+            return redirect(reverse('agendar_servico'))
         except Client.DoesNotExist:
             messages.error(request, 'Cliente não encontrado.')
         except Animal.DoesNotExist:
@@ -53,18 +71,24 @@ def agendar_servico(request):
     return render(request, '../templates/agenda.html', {'animais': animais, 'servicos': servicos})
 
 
+@login_required
 def criar_servico(request):
+    if request.user.cargo != 'W':
+        messages.add_message(request, messages.ERROR, 'Você não tem permissão para acessar esta página.')
+        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
+    
     if request.method == "GET":
         return render(request, 'servico.html')
     elif request.method == "POST":
         nome_servico = request.POST.get('nome_servico')
         descricao = request.POST.get('descricao')
+        duracao = request.POST.get('duracao')
 
-        if not nome_servico or not descricao:
-            messages.add_message(request, messages.ERROR, 'Os campos Nome do serviço e Descrição são obrigatórios.')
+        if not nome_servico or not descricao or not duracao:
+            messages.add_message(request, messages.ERROR, 'Todos os campos são obrigatórios.')
             return redirect(reverse('criar_servico'))
 
-        servico = Servico(nome=nome_servico, descricao=descricao)
+        servico = Servico(nome=nome_servico, descricao=descricao, duracao=duracao)
         servico.save()  # Salva o serviço no banco de dados
 
         messages.add_message(request, messages.SUCCESS, 'Serviço cadastrado com sucesso.')
