@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+<section class="brand">
+    {% if messages %}
+    <br>
+    {% for message in messages %}
+    <div class="alert {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <div class="login">
+        <h1>Agendamentos Não Finalizados</h1>
+        <form method="POST" action="{% url 'finalizar_agendamentos' %}">
+            {% csrf_token %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Animal</th>
+                        <th>Serviço</th>
+                        <th>Finalizar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agendamento in agendamentos %}
+                    <tr>
+                        <td>{{ agendamento.data }}</td>
+                        <td>{{ agendamento.horario }}</td>
+                        <td>{{ agendamento.id_animal.nome }}</td>
+                        <td>{{ agendamento.id_servico.nome }}</td>
+                        <td><input type="checkbox" name="finalizar" value="{{ agendamento.id }}"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn-success">Marcar como Finalizado</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -109,3 +109,27 @@ def criar_servico(request):
         except ValueError:
             messages.add_message(request, messages.ERROR, 'Formato de duração inválido.')
             return redirect(reverse('criar_servico'))
+        
+
+@login_required
+def listar_agendamentos(request):
+    if request.user.cargo != 'W':
+        messages.error(request, 'Você não tem permissão para acessar esta página.')
+        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
+    
+    agendamentos = Agendamento.objects.filter(finalizado=False)
+
+    return render(request, 'listar_agendamentos.html', {'agendamentos': agendamentos})
+
+@login_required
+def finalizar_agendamentos(request):
+    if request.user.cargo != 'W':
+        messages.error(request, 'Você não tem permissão para acessar esta página.')
+        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
+    
+    if request.method == 'POST':
+        agendamentos_ids = request.POST.getlist('finalizar')
+        Agendamento.objects.filter(id__in=agendamentos_ids).update(finalizado=True)
+        messages.success(request, 'Agendamentos marcados como finalizados com sucesso.')
+
+    return redirect('listar_agendamentos')
