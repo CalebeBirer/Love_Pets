@@ -1,5 +1,5 @@
 from datetime import timedelta
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from datetime import datetime
@@ -9,15 +9,33 @@ from cliente.models import Animal, Client
 
 @login_required
 def agendar_servico(request):
+    try:
+        client = get_object_or_404(Client, user=request.user)
+        animais = Animal.objects.filter(client=client)
+    except Client.DoesNotExist:
+        messages.error(request, 'Cliente não encontrado. Por favor, registre suas informações de cliente primeiro.')
+        return redirect('register_client_info')
+    except Exception as e:
+        messages.error(request, f'Erro ao obter informações do cliente: {e}')
+        animais = []
+
+    try:
+        servicos = Servico.objects.all()
+    except Exception as e:
+        messages.error(request, f'Erro ao obter lista de serviços: {e}')
+        servicos = []
+
     if request.method == 'POST':
-        data = request.POST.get('data')
-        horario = request.POST.get('horario')
+        data_str = request.POST.get('data')
+        horario_str = request.POST.get('horario')
         observacao = request.POST.get('observacao')
         id_animal = request.POST.get('id_animal')
         id_servico = request.POST.get('id_servico')
-        
+
         try:
-            client = Client.objects.get(user=request.user)
+            data = datetime.strptime(data_str, '%Y-%m-%d').date()
+            horario = datetime.strptime(horario_str, '%H:%M').time()
+
             animal = Animal.objects.get(id=id_animal, client=client)
             servico = Servico.objects.get(id=id_servico)
             duracao = servico.duracao
@@ -29,14 +47,15 @@ def agendar_servico(request):
             # Verificar se o horário está disponível
             agendamentos_existentes = Agendamento.objects.filter(
                 id_animal=animal,
-                data=data,
-                horario__lt=horario_fim,
-                horario__gt=horario_inicio - timedelta(seconds=1)
+                data=data
+            ).exclude(
+                horario__gte=horario_fim.time(),
+                horario__lt=(horario_inicio - duracao).time()
             )
 
             if agendamentos_existentes.exists():
                 messages.error(request, 'Já existe um agendamento para este horário.')
-                return redirect(reverse('agendar_servico'))
+                return redirect(reverse('criar_agenda'))
 
             agendamento = Agendamento(
                 data=data,
@@ -49,24 +68,13 @@ def agendar_servico(request):
             )
             agendamento.save()
             messages.success(request, 'Serviço agendado com sucesso!')
-            return redirect(reverse('agendar_servico'))
-        except Client.DoesNotExist:
-            messages.error(request, 'Cliente não encontrado.')
+            return redirect('inicio')
         except Animal.DoesNotExist:
             messages.error(request, 'Animal não encontrado ou você não tem permissão para agendar este animal.')
         except Servico.DoesNotExist:
             messages.error(request, 'Serviço não encontrado.')
         except Exception as e:
             messages.error(request, f'Erro ao agendar serviço: {e}')
-    else:
-        try:
-            client = Client.objects.get(user=request.user)
-            animais = Animal.objects.filter(client=client)
-            servicos = Servico.objects.all()
-        except Client.DoesNotExist:
-            animais = []
-            servicos = []
-            messages.error(request, 'Cliente não encontrado.')
 
     return render(request, '../templates/agenda.html', {'animais': animais, 'servicos': servicos})
 
@@ -88,8 +96,16 @@ def criar_servico(request):
             messages.add_message(request, messages.ERROR, 'Todos os campos são obrigatórios.')
             return redirect(reverse('criar_servico'))
 
-        servico = Servico(nome=nome_servico, descricao=descricao, duracao=duracao)
-        servico.save()  # Salva o serviço no banco de dados
+        try:
+            # Converte a duração para um objeto timedelta
+            hours, minutes = map(int, duracao.split(':'))
+            duracao_timedelta = timedelta(hours=hours, minutes=minutes)
 
-        messages.add_message(request, messages.SUCCESS, 'Serviço cadastrado com sucesso.')
-        return redirect(reverse('criar_servico'))
+            servico = Servico(nome=nome_servico, descricao=descricao, duracao=duracao_timedelta)
+            servico.save()  # Salva o serviço no banco de dados
+
+            messages.add_message(request, messages.SUCCESS, 'Serviço cadastrado com sucesso.')
+            return redirect(reverse('criar_servico'))
+        except ValueError:
+            messages.add_message(request, messages.ERROR, 'Formato de duração inválido.')
+            return redirect(reverse('criar_servico'))
