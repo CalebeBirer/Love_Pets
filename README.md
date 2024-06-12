@@ -5,7 +5,7 @@ O projeto irá adotar as seguintes tecnologias:
 - **[Python](https://www.python.org/)**: linguagem;
 - **[Django](https://www.djangoproject.com/)**: aplicação cliente na web;
 - **[MySql](https://www.mysql.com/)**: base de dados;
-- **[Cloudflare](https://developers.cloudflare.com/):** provedor de serviços de cloud<h1>;
+- **[Cloudflare](https://developers.cloudflare.com/):** provedor de serviços de cloud<h1>
 
 
 <h1 align="center">INSTALACAO</h1>
