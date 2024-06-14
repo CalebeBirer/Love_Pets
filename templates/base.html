@@ -28,12 +28,12 @@
         <div class="img-navlist">
             <img src="{% static 'cliente/img/logo_nav_bar_2.png' %}">
         </div>
-        <a href="#" class="logo">Love Pets</a>
         <ul class="navlist">
             <li><a href="{% url 'inicio' %}">Home</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'criar_agenda' %}">Agenda</a></li>
                 <li><a href="{% url 'register_pet' %}">Pets</a></li>
+                <li><a href="{% url 'listar_agendamentos' %}">Minha Agenda</a></li>
                 {% if user.cargo == 'W' %}
                     <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
                 {% endif %}

@@ -3,32 +3,16 @@
 
 {% block 'body' %}
 <section class="brand"> 
+
     {% if messages %}
     <br>
         {% for message in messages %}
-            <div class="alert {{ message.tags }}">{{ message }}</div>
+            <div class="alert {{ message.tags }}"> {{ message }} </div>
         {% endfor %}
     {% endif %}
 
     <div class="login">
-        <form action="{% url 'criar_servico' %}" method="POST">{% csrf_token %}
-            <label>CADASTRO DE SERVIÇOS</label>
-            <br>
-            <label for="nome_servico">Nome do Serviço:</label>
-            <input type="text" id="nome_servico" name="nome_servico" placeholder="Digite o nome do serviço..." class="form-control" required>
-            <br>
-            <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" name="descricao" placeholder="Digite a descrição do serviço..." class="form-control" required>
-            <br>
-            <label for="duracao">Duração (HH:MM):</label>
-            <input type="time" id="duracao" name="duracao" class="form-control" required>
-            <br>
-            <input type="submit" class="btn-success" value="Cadastrar Serviço">
-        </form>
-    </div>
-
-    <div class="login">
-        <h1>Agendamentos</h1>
+        <h1>Meus Agendamentos</h1>
         {% if agendamentos %}
             <table class="table">
                 <thead>
@@ -64,5 +48,6 @@
             <p>Você não tem nenhum agendamento.</p>
         {% endif %}
     </div>
+
 </section>
 {% endblock %}

@@ -109,3 +109,17 @@ def criar_servico(request):
         except ValueError:
             messages.add_message(request, messages.ERROR, 'Formato de duração inválido.')
             return redirect(reverse('criar_servico'))
+        
+@login_required
+def listar_agendamentos(request):
+    try:
+        client = get_object_or_404(Client, user=request.user)
+        agendamentos = Agendamento.objects.filter(id_cliente=request.user).order_by('-data', '-horario')
+    except Client.DoesNotExist:
+        messages.error(request, 'Cliente não encontrado. Por favor, registre suas informações de cliente primeiro.')
+        return redirect('register_client_info')
+    except Exception as e:
+        messages.error(request, f'Erro ao obter agendamentos: {e}')
+        agendamentos = []
+
+    return render(request, 'listar_agendamentos.html', {'agendamentos': agendamentos})
