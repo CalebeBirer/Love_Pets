@@ -3,51 +3,61 @@
 
 {% block 'body' %}
 
-
 <section class="brand"> 
-
-    {% if messages  %}
+    {% if messages %}
     <br>
         {% for message in messages %}
-            <div class="alert {{message.tags}}"> {{message}} </div>
+            <div class="alert {{ message.tags }}"> {{ message }} </div>
         {% endfor %}
     {% endif %}
 
     <div class="login">
-        <form method="POST">{% csrf_token %}
+        <label>AGENDAR SERVIÇO</label>
+        <form method="POST" action="{% url 'criar_agenda' %}">
+            {% csrf_token %}
             <br>
             <label for="data">Data:</label>
-            <input type="date" id="data" name="data" required class="form-control">
+            <input type="date" id="data" name="data" value="{{ data }}" required class="form-control">
             <br>
-
-            <label for="horario">Horário:</label>
-            <input type="time" id="horario" name="horario" required class="form-control">
-            <br>
-
-            <label for="observacao">Observação:</label>
-            <textarea id="observacao" name="observacao" class="form-control"></textarea>
-            <br>
-
-            <label for="id_animal">Animal:</label>
-            <select id="id_animal" name="id_animal" required class="form-control">
-                {% for animal in animais %}
-                <option value="{{ animal.id }}">{{ animal.nome }}</option>
-                {% endfor %}
-            </select><br>
 
             <label for="id_servico">Serviço:</label>
             <select id="id_servico" name="id_servico" required class="form-control">
                 {% for servico in servicos %}
-                <option value="{{ servico.id }}">{{ servico.nome }}</option>
+                <option value="{{ servico.id }}" {% if servico.id == id_servico %}selected{% endif %}>{{ servico.nome }}</option>
                 {% endfor %}
-            </select><br><br>
+            </select><br>
 
-            <button type="submit" class="btn-success">Agendar</button>
+            <input type="submit" name="submit_horarios" class="btn-success" value="Verificar Disponíveis">
         </form>
+
+        {% if horarios_disponiveis %}
+            <form method="POST" action="{% url 'criar_agenda' %}">
+                {% csrf_token %}
+                <input type="hidden" name="data" value="{{ data }}">
+                <input type="hidden" name="id_servico" value="{{ id_servico }}">
+
+                <label for="horario">Horário:</label>
+                <select id="horario" name="horario" required class="form-control">
+                    {% for horario in horarios_disponiveis %}
+                    <option value="{{ horario }}">{{ horario }}</option>
+                    {% endfor %}
+                </select><br>
+
+                <label for="id_animal">Animal:</label>
+                <select id="id_animal" name="id_animal" required class="form-control">
+                    {% for animal in animais %}
+                    <option value="{{ animal.id }}">{{ animal.nome }}</option>
+                    {% endfor %}
+                </select><br>
+
+                <label for="observacao">Observação:</label>
+                <textarea id="observacao" name="observacao" class="form-control"></textarea>
+                <br>
+
+                <input type="submit" class="btn-success" value="Agendar">
+            </form>
+        {% endif %}
     </div>
-
 </section>
-
-
 
 {% endblock %}

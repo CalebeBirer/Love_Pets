@@ -3,7 +3,6 @@
 
 {% block 'body' %}
 <section class="brand"> 
-
     {% if messages %}
     <br>
         {% for message in messages %}
@@ -11,8 +10,8 @@
         {% endfor %}
     {% endif %}
 
-    <div class="login">
-        <h1>Meus Agendamentos</h1>
+    <div class="agendamentos">
+        <h1>Todos os Agendamentos</h1>
         {% if agendamentos %}
             <table class="table">
                 <thead>
@@ -23,6 +22,9 @@
                         <th>Animal</th>
                         <th>Observação</th>
                         <th>Status</th>
+                        {% if user.cargo == 'W' %}
+                            <th>Ações</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -40,14 +42,31 @@
                                     Pendente
                                 {% endif %}
                             </td>
+                            {% if user.cargo == 'W' %}
+                                <td>
+                                    {% if not agendamento.finalizado %}
+                                        <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                            <input type="hidden" name="action" value="finalizar">
+                                            <input type="submit" class="btn-success" value="Finalizar">
+                                        </form>
+                                    {% endif %}
+                                    <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                        <input type="hidden" name="action" value="cancelar">
+                                        <input type="submit" class="btn-danger" value="Cancelar">
+                                    </form>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>Você não tem nenhum agendamento.</p>
+            <p>Não há agendamentos cadastrados.</p>
         {% endif %}
     </div>
-
 </section>
 {% endblock %}

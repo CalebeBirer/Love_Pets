@@ -26,43 +26,5 @@
             <input type="submit" class="btn-success" value="Cadastrar Serviço">
         </form>
     </div>
-
-    <div class="login">
-        <h1>Agendamentos</h1>
-        {% if agendamentos %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Serviço</th>
-                        <th>Animal</th>
-                        <th>Observação</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agendamento in agendamentos %}
-                        <tr>
-                            <td>{{ agendamento.data }}</td>
-                            <td>{{ agendamento.horario }}</td>
-                            <td>{{ agendamento.id_servico.nome }}</td>
-                            <td>{{ agendamento.id_animal.nome }}</td>
-                            <td>{{ agendamento.observacao }}</td>
-                            <td>
-                                {% if agendamento.finalizado %}
-                                    Finalizado
-                                {% else %}
-                                    Pendente
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>Você não tem nenhum agendamento.</p>
-        {% endif %}
-    </div>
 </section>
 {% endblock %}

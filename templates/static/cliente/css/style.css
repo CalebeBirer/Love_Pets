@@ -11,7 +11,7 @@
 :root {
     --bg-color: #ffffff;
     --text-color: #111111;
-    --main-color: #c8815f;
+    --main-color: #dabb40;
     --big-font: 4.5rem;
     --h2-font: 3.3rem;
     --h3-font: 2rem;
@@ -393,3 +393,79 @@ label {
     display: flex;
     align-items: center;
 }
+.home_inicio {
+    min-height: 100vh;
+    width: 100%;
+    background: url(../img/fundo_inicio.jpeg);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+}
+
+.home-carrinho {
+    min-height: 100vh;
+    width: 100%;
+    background: url(img/back_carrinho.jpeg);
+    background-size: cover;
+    background-position: center top;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+}
+
+.home-text h1 {
+    font-size: var(--big-font);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .6rem;
+    margin-bottom: 1.4rem;
+}
+
+.home-carinho h1 {
+    font-size: var(--big-font);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .6rem;
+    margin-bottom: 1.4rem;
+    color: #ffffff;
+}
+
+.home-text span {
+    font-size: var(--h2-font);
+}
+
+.home-text p {
+    font-size: var(--normal-font);    
+    font-weight: 800;
+    margin-bottom: 3rem;
+    letter-spacing: .2rem;
+}
+
+
+.btn {
+    display: inline-block;
+    padding: 13px 25px;
+    background: var(--main-color);
+    color: var(--bg-color);
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: all .35s ease;
+}
+
+.btn:hover {
+    transform: translateY(-5px);
+    background: var(--text-colos);
+}
+
+header.sticky {
+    background: var(--bg-color);
+    padding: 14px 14%;
+    box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
+}
+
