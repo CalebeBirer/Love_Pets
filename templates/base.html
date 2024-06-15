@@ -28,12 +28,12 @@
         <div class="img-navlist">
             <img src="{% static 'cliente/img/logo_nav_bar_2.png' %}">
         </div>
-        <a href="#" class="logo">Love Pets</a>
         <ul class="navlist">
             <li><a href="{% url 'inicio' %}">Home</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'criar_agenda' %}">Agenda</a></li>
                 <li><a href="{% url 'register_pet' %}">Pets</a></li>
+                <li><a href="{% url 'listar_agendamentos' %}">Minha Agenda</a></li>
                 {% if user.cargo == 'W' %}
                     <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
                 {% endif %}
@@ -70,31 +70,6 @@
 
     {% endblock %}
 
-        <!-- -brand-
-        <section class="brand">
-            <div class="brand-content">
-                <div class="main">
-                    <a href="https://www.nespresso.com/br/pt/"><img src="img/Nespresso_logo.png"></a>
-                </div>
-                <div class="main">
-                    <a
-                        href="https://www.cafelor.com.br/?gclid=Cj0KCQjwxuCnBhDLARIsAB-cq1o_3-vV9EuC9I6Ut1pAzwQqugvz9kJRTKKlLTeq03gXJIfoVOrlMWYaAkcSEALw_wcB>"><img
-                            src="img/lor_logo.webp"></a>
-                </div>
-                <div class="main">
-                    <a href="https://www.starbucks.com.br"><img src="img/starbucks_logo.png"></a>
-                </div>
-                <div class="main">
-                    <a
-                        href="https://www.mercafe.com.br/?utm_source=bing&utm_medium=cpc&utm_campaign=bing_mer_institucional&msclkid=70095ae5fcaa1c8bd4f83e03e93ea8ca"><img
-                            src="img/tres_logo1.png"></a>
-                </div>
-                <div class="main">
-                    <a href="https://www.nescafe-dolcegusto.com.br"><img src="img/Dolce_gusto_logo.png.webp"></a>
-                </div>
-            </div>
-        </section>     -->
-
     <!---contact--->
     <section class="contact" id="contact">
         <div class="main-contact">
@@ -103,7 +78,7 @@
                 utilizando a sua água e energia para maior conveniência.</h5>
 
             <div class="icons">
-                <a href="https://w.app/LovePets"><i
+                <a href="https://api.whatsapp.com/send?phone=5519997895246&text=Ol%C3%A1+quero+fazer+um+agendamento"><i
                         class='bx bx-message-detail'></i></a>
                 <a href="https://www.instagram.com/lovepets.ma/"><i
                         class='bx bxl-instagram-alt'></i></a>

@@ -12,6 +12,7 @@
 
     <div class="login">
         <form action="{% url 'criar_servico' %}" method="POST">{% csrf_token %}
+            <label>CADASTRO DE SERVIÇOS</label>
             <br>
             <label for="nome_servico">Nome do Serviço:</label>
             <input type="text" id="nome_servico" name="nome_servico" placeholder="Digite o nome do serviço..." class="form-control" required>

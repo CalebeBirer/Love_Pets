@@ -1,135 +1,149 @@
-from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from datetime import datetime
+from django.http import HttpResponse
+from .models import Users, Animal, Client
 from django.contrib import messages
-from .models import Agendamento, Servico
-from cliente.models import Animal, Client
+from django.urls import reverse
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+
+
+def inicio(request):
+    return render(request, '../templates/inicio.html')
+
+def login(request):
+    return render(request, '../templates/login.html')
+
+
+def register_client(request):
+    if request.method == "GET":        
+        return render(request, 'register_client.html')
+    if request.method == "POST":
+        nome = request.POST.get('nome')
+        sobrenome = request.POST.get('sobrenome')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+        confirma_senha = request.POST.get('confirma_senha')
+
+        user = Users.objects.filter(email=email)
+
+        if user.exists():            
+            messages.add_message(request, messages.ERROR, 'E-mail ja cadastrado em outro momento')
+            return redirect(reverse('register_client'))                
+        elif (senha != confirma_senha):
+            messages.add_message(request, messages.ERROR, 'As senhas digitas não conferem')
+            return redirect(reverse('register_client'))
+        elif (senha == ''):
+            messages.add_message(request, messages.ERROR, 'O campo senha é obrigatorio')
+            return redirect(reverse('register_client'))
+        
+        user = Users.objects.create_user(username=email, 
+                                        email=email, 
+                                        password=senha, 
+                                        first_name=nome, 
+                                        last_name=sobrenome,
+                                        cargo="C")
+
+        messages.add_message(request, messages.SUCCESS, 'Usuario cadastrado com sucesso')
+        return redirect(reverse('login'))
+
+def login(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            # redirect redireciona para a pagina desejada e o reverse tranforma o nome em um URL
+            messages.add_message(request, messages.ERROR, 'Usuario ja logado')
+            return redirect(reverse('register_client')) 
+        return render(request, 'login.html')
+    elif request.method == "POST": 
+        login = request.POST.get('email')
+        senha = request.POST.get('senha')
+
+        user = auth.authenticate(username=login, password=senha)
+
+        if not user:
+            messages.add_message(request, messages.ERROR, 'Usuario ou senha invalidos')
+            return redirect(reverse('login'))
+        
+        auth.login(request,user)
+        messages.add_message(request, messages.SUCCESS, 'Usuario logado com Sucesso')
+        messages.add_message(request, messages.SUCCESS, 'Cadastre seu Pet na aba Pets')
+        return redirect(reverse('login'))
+    
+def logout(request):
+    request.session.flush()
+    messages.add_message(request, messages.WARNING, 'Logout efetuado com sucesso')
+    return redirect(reverse('login'))
 
 @login_required
-def agendar_servico(request):
+def register_pet(request):
     try:
         client = get_object_or_404(Client, user=request.user)
-        animais = Animal.objects.filter(client=client)
-    except Client.DoesNotExist:
-        messages.error(request, 'Cliente não encontrado. Por favor, registre suas informações de cliente primeiro.')
-        return redirect('register_client_info')
-    except Exception as e:
-        messages.error(request, f'Erro ao obter informações do cliente: {e}')
-        animais = []
+    except:
+        messages.error(request, 'Você precisa registrar suas informações de cliente antes de cadastrar um pet.')
+        return redirect('register_client_info')  # Redireciona para a página de registro de informações do cliente
 
-    try:
-        servicos = Servico.objects.all()
-    except Exception as e:
-        messages.error(request, f'Erro ao obter lista de serviços: {e}')
-        servicos = []
+    if request.method == "POST":
+        nome_pet = request.POST.get('nome_pet')
+        raca = request.POST.get('raca')
+        tipo_pelo = request.POST.get('tipo_pelo')
+        porte = request.POST.get('porte')
 
-    if request.method == 'POST':
-        data_str = request.POST.get('data')
-        horario_str = request.POST.get('horario')
-        observacao = request.POST.get('observacao')
-        id_animal = request.POST.get('id_animal')
-        id_servico = request.POST.get('id_servico')
-
-        try:
-            data = datetime.strptime(data_str, '%Y-%m-%d').date()
-            horario = datetime.strptime(horario_str, '%H:%M').time()
-
-            animal = Animal.objects.get(id=id_animal, client=client)
-            servico = Servico.objects.get(id=id_servico)
-            duracao = servico.duracao
-
-            # Calcular o horário de término
-            horario_inicio = datetime.combine(data, horario)
-            horario_fim = horario_inicio + duracao
-
-            # Verificar se o horário está disponível
-            agendamentos_existentes = Agendamento.objects.filter(
-                id_animal=animal,
-                data=data
-            ).exclude(
-                horario__gte=horario_fim.time(),
-                horario__lt=(horario_inicio - duracao).time()
-            )
-
-            if agendamentos_existentes.exists():
-                messages.error(request, 'Já existe um agendamento para este horário.')
-                return redirect(reverse('criar_agenda'))
-
-            agendamento = Agendamento(
-                data=data,
-                horario=horario,
-                observacao=observacao,
-                id_animal=animal,
-                id_cliente=request.user,
-                id_servico=servico,
-                finalizado=False
-            )
-            agendamento.save()
-            messages.success(request, 'Serviço agendado com sucesso!')
-            return redirect('inicio')
-        except Animal.DoesNotExist:
-            messages.error(request, 'Animal não encontrado ou você não tem permissão para agendar este animal.')
-        except Servico.DoesNotExist:
-            messages.error(request, 'Serviço não encontrado.')
-        except Exception as e:
-            messages.error(request, f'Erro ao agendar serviço: {e}')
-
-    return render(request, '../templates/agenda.html', {'animais': animais, 'servicos': servicos})
-
-
-@login_required
-def criar_servico(request):
-    if request.user.cargo != 'W':
-        messages.add_message(request, messages.ERROR, 'Você não tem permissão para acessar esta página.')
-        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
-    
-    if request.method == "GET":
-        return render(request, 'servico.html')
-    elif request.method == "POST":
-        nome_servico = request.POST.get('nome_servico')
-        descricao = request.POST.get('descricao')
-        duracao = request.POST.get('duracao')
-
-        if not nome_servico or not descricao or not duracao:
+        if not nome_pet or not raca or not tipo_pelo or not porte:
             messages.add_message(request, messages.ERROR, 'Todos os campos são obrigatórios.')
-            return redirect(reverse('criar_servico'))
+            return redirect(reverse('register_pet'))
 
-        try:
-            # Converte a duração para um objeto timedelta
-            hours, minutes = map(int, duracao.split(':'))
-            duracao_timedelta = timedelta(hours=hours, minutes=minutes)
+        animal = Animal(
+            nome=nome_pet,
+            raca=raca,
+            tipo_pelo=tipo_pelo,
+            porte=porte,
+            client=client
+        )
 
-            servico = Servico(nome=nome_servico, descricao=descricao, duracao=duracao_timedelta)
-            servico.save()  # Salva o serviço no banco de dados
+        animal.save()
 
-            messages.add_message(request, messages.SUCCESS, 'Serviço cadastrado com sucesso.')
-            return redirect(reverse('criar_servico'))
-        except ValueError:
-            messages.add_message(request, messages.ERROR, 'Formato de duração inválido.')
-            return redirect(reverse('criar_servico'))
+        messages.add_message(request, messages.SUCCESS, 'Pet cadastrado com sucesso')
+        return redirect(reverse('inicio'))
+
+    choices_pelo = Animal._meta.get_field('tipo_pelo').choices
+    choices_porte = Animal._meta.get_field('porte').choices
+    context = {
+        'choices_pelo': choices_pelo,
+        'choices_porte': choices_porte
+    }
+    return render(request, 'register_pet.html', context)        
+
+@login_required
+def register_client_info(request):
+    if request.method == "POST":
+        cpf = request.POST.get('cpf')
+        telefone = request.POST.get('telefone')
+        sexo = request.POST.get('sexo')
+        cep = request.POST.get('cep')
+        estado = request.POST.get('estado')
+        bairro = request.POST.get('bairro')
+        numero = request.POST.get('numero')
+        complemento = request.POST.get('complemento')
         
-
-@login_required
-def listar_agendamentos(request):
-    if request.user.cargo != 'W':
-        messages.error(request, 'Você não tem permissão para acessar esta página.')
-        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
+        client = Client(
+            user=request.user,  
+            cpf=cpf,
+            telefone=telefone,
+            sexo=sexo,
+            cep=cep,
+            estado=estado,
+            bairro=bairro,
+            numero=numero,
+            complemento=complemento
+        )
+        client.save()
+        
+        messages.success(request, 'Dados complementares cadastrados com sucesso')
+        return redirect('inicio')
     
-    agendamentos = Agendamento.objects.filter(finalizado=False)
-
-    return render(request, 'listar_agendamentos.html', {'agendamentos': agendamentos})
-
-@login_required
-def finalizar_agendamentos(request):
-    if request.user.cargo != 'W':
-        messages.error(request, 'Você não tem permissão para acessar esta página.')
-        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
-    
-    if request.method == 'POST':
-        agendamentos_ids = request.POST.getlist('finalizar')
-        Agendamento.objects.filter(id__in=agendamentos_ids).update(finalizado=True)
-        messages.success(request, 'Agendamentos marcados como finalizados com sucesso.')
-
-    return redirect('listar_agendamentos')
+    estados_choices = Client._meta.get_field('estado').choices
+    sexo_choices = Client._meta.get_field('sexo').choices
+    context = {
+        'estados_choices': estados_choices,
+        'sexo_choices': sexo_choices
+    }
+    return render(request, 'register_client_info.html', context)

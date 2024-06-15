@@ -73,39 +73,6 @@ def logout(request):
     messages.add_message(request, messages.WARNING, 'Logout efetuado com sucesso')
     return redirect(reverse('login'))
 
-
-# @login_required
-# def register_pet(request):
-#     if request.method == "POST":            
-#         nome_pet = request.POST.get('nome_pet')
-#         raca = request.POST.get('raca')
-#         tipo_pelo = request.POST.get('tipo_pelo')
-#         porte = request.POST.get('porte')
-        
-#         # Obtém a instância do cliente logado
-#         client = get_object_or_404(Client, user=request.user)
-
-#         animal = Animal(
-#             nome=nome_pet,
-#             raca=raca,
-#             tipo_pelo=tipo_pelo,
-#             porte=porte,
-#             client=client  # Atribui a instância de Client
-#         )
-        
-#         animal.save()
-
-#         messages.add_message(request, messages.SUCCESS, 'Pet cadastrado com sucesso')
-#         return redirect(reverse('inicio'))  # Redireciona para a página inicial ou outra página desejada
-
-#     choices_pelo = Animal._meta.get_field('tipo_pelo').choices
-#     choices_porte = Animal._meta.get_field('porte').choices
-#     context = {
-#         'choices_pelo': choices_pelo,
-#         'choices_porte': choices_porte
-#     }
-#     return render(request, 'register_pet.html', context)
-
 @login_required
 def register_pet(request):
     try:
@@ -144,9 +111,6 @@ def register_pet(request):
         'choices_porte': choices_porte
     }
     return render(request, 'register_pet.html', context)        
-
-
-# register_client_info
 
 @login_required
 def register_client_info(request):

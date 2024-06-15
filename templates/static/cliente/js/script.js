@@ -43,3 +43,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000); // 5000 milissegundos = 5 segundos
 });
+

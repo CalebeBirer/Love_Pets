@@ -2,41 +2,71 @@
 {% load static %}
 
 {% block 'body' %}
-<section class="brand">
+<section class="brand"> 
     {% if messages %}
     <br>
-    {% for message in messages %}
-    <div class="alert {{ message.tags }}">{{ message }}</div>
-    {% endfor %}
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}"> {{ message }} </div>
+        {% endfor %}
     {% endif %}
-    <div class="login">
-        <h1>Agendamentos Não Finalizados</h1>
-        <form method="POST" action="{% url 'finalizar_agendamentos' %}">
-            {% csrf_token %}
-            <table>
+
+    <div class="agendamentos">
+        <h1>Todos os Agendamentos</h1>
+        {% if agendamentos %}
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Data</th>
                         <th>Horário</th>
-                        <th>Animal</th>
                         <th>Serviço</th>
-                        <th>Finalizar</th>
+                        <th>Animal</th>
+                        <th>Observação</th>
+                        <th>Status</th>
+                        {% if user.cargo == 'W' %}
+                            <th>Ações</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for agendamento in agendamentos %}
-                    <tr>
-                        <td>{{ agendamento.data }}</td>
-                        <td>{{ agendamento.horario }}</td>
-                        <td>{{ agendamento.id_animal.nome }}</td>
-                        <td>{{ agendamento.id_servico.nome }}</td>
-                        <td><input type="checkbox" name="finalizar" value="{{ agendamento.id }}"></td>
-                    </tr>
+                        <tr>
+                            <td>{{ agendamento.data }}</td>
+                            <td>{{ agendamento.horario }}</td>
+                            <td>{{ agendamento.id_servico.nome }}</td>
+                            <td>{{ agendamento.id_animal.nome }}</td>
+                            <td>{{ agendamento.observacao }}</td>
+                            <td>
+                                {% if agendamento.finalizado %}
+                                    Finalizado
+                                {% else %}
+                                    Pendente
+                                {% endif %}
+                            </td>
+                            {% if user.cargo == 'W' %}
+                                <td>
+                                    {% if not agendamento.finalizado %}
+                                        <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                            <input type="hidden" name="action" value="finalizar">
+                                            <input type="submit" class="btn-success" value="Finalizar">
+                                        </form>
+                                    {% endif %}
+                                    <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                        <input type="hidden" name="action" value="cancelar">
+                                        <input type="submit" class="btn-danger" value="Cancelar">
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <button type="submit" class="btn-success">Marcar como Finalizado</button>
-        </form>
+        {% else %}
+            <p>Não há agendamentos cadastrados.</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
