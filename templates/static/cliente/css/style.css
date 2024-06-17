@@ -11,7 +11,7 @@
 :root {
     --bg-color: hsl(0, 0%, 100%);
     --text-color: #111111;
-    --main-color: #ecb43a;
+    --main-color: #f7f6f3;
     --big-font: 4.5rem;
     --h2-font: 3.3rem;
     --h3-font: 2rem;
@@ -197,6 +197,20 @@ label {
     background-color: #218838;
 }
 
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
 /* Estilo para o messagebox */
 .alert {
     position: relative;
@@ -262,6 +276,7 @@ label {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    background-color: #f2f2f2;
 }
 
 .table th, .table td {
@@ -343,7 +358,8 @@ label {
 
 .brand {
     padding: 200px 14%;
-    background: #ffd79c;
+    /* background: #ffd79c; */
+    background-color: #ffae00;
 }
 
 .main-contact li {

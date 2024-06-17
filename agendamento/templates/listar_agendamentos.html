@@ -10,63 +10,67 @@
         {% endfor %}
     {% endif %}
 
-    <div class="agendamentos">
-        <h1>Todos os Agendamentos</h1>
-        {% if agendamentos %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Serviço</th>
-                        <th>Animal</th>
-                        <th>Observação</th>
-                        <th>Status</th>
-                        {% if user.cargo == 'W' %}
-                            <th>Ações</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agendamento in agendamentos %}
-                        <tr>
-                            <td>{{ agendamento.data }}</td>
-                            <td>{{ agendamento.horario }}</td>
-                            <td>{{ agendamento.id_servico.nome }}</td>
-                            <td>{{ agendamento.id_animal.nome }}</td>
-                            <td>{{ agendamento.observacao }}</td>
-                            <td>
-                                {% if agendamento.finalizado %}
-                                    Finalizado
-                                {% else %}
-                                    Pendente
+    <div class="login">
+        <div class="agendamentos">
+            <h1><label>Todos os Agendamentos</label></h1>
+            {% if agendamentos %}
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Horário</th>
+                                <th>Serviço</th>
+                                <th>Animal</th>
+                                <th>Observação</th>
+                                <th>Status</th>
+                                {% if user.cargo == 'W' %}
+                                    <th>Ações</th>
                                 {% endif %}
-                            </td>
-                            {% if user.cargo == 'W' %}
-                                <td>
-                                    {% if not agendamento.finalizado %}
-                                        <form method="POST" action="{% url 'listar_agendamentos' %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
-                                            <input type="hidden" name="action" value="finalizar">
-                                            <input type="submit" class="btn-success" value="Finalizar">
-                                        </form>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for agendamento in agendamentos %}
+                                <tr>
+                                    <td>{{ agendamento.data }}</td>
+                                    <td>{{ agendamento.horario }}</td>
+                                    <td>{{ agendamento.id_servico.nome }}</td>
+                                    <td>{{ agendamento.id_animal.nome }}</td>
+                                    <td>{{ agendamento.observacao }}</td>
+                                    <td>
+                                        {% if agendamento.finalizado %}
+                                            Finalizado
+                                        {% else %}
+                                            Pendente
+                                        {% endif %}
+                                    </td>
+                                    {% if user.cargo == 'W' %}
+                                        <td>
+                                            {% if not agendamento.finalizado %}
+                                                <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                                    <input type="hidden" name="action" value="finalizar">
+                                                    <input type="submit" class="btn-success" value="Finalizar">
+                                                </form>
+                                            {% endif %}
+                                            <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                                <input type="hidden" name="action" value="cancelar">
+                                                <input type="submit" class="btn-danger" value="Cancelar">
+                                            </form>
+                                        </td>
                                     {% endif %}
-                                    <form method="POST" action="{% url 'listar_agendamentos' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
-                                        <input type="hidden" name="action" value="cancelar">
-                                        <input type="submit" class="btn-danger" value="Cancelar">
-                                    </form>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>Não há agendamentos cadastrados.</p>
-        {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Não há agendamentos cadastrados.</p>
+            {% endif %}
+        </div>
     </div>
 </section>
 {% endblock %}
