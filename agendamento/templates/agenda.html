@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block 'body' %}
-<section class="brand"> 
+<section class="brand">
     {% if messages %}
-    <br>
+        <br>
         {% for message in messages %}
             <div class="alert {{ message.tags }}"> {{ message }} </div>
         {% endfor %}
@@ -22,7 +22,7 @@
             <label for="id_servico">Serviço:</label>
             <select id="id_servico" name="id_servico" required class="form-control">
                 {% for servico in servicos %}
-                <option value="{{ servico.id }}" {% if servico.id == id_servico %}selected{% endif %}>{{ servico.nome }}</option>
+                    <option value="{{ servico.id }}" {% if servico.id == id_servico %}selected{% endif %}>{{ servico.nome }}</option>
                 {% endfor %}
             </select><br>
 
@@ -38,14 +38,14 @@
                 <label for="horario">Horário:</label>
                 <select id="horario" name="horario" required class="form-control">
                     {% for horario in horarios_disponiveis %}
-                    <option value="{{ horario }}">{{ horario }}</option>
+                        <option value="{{ horario }}">{{ horario }}</option>
                     {% endfor %}
                 </select><br>
 
                 <label for="id_animal">Animal:</label>
                 <select id="id_animal" name="id_animal" required class="form-control">
                     {% for animal in animais %}
-                    <option value="{{ animal.id }}">{{ animal.nome }}</option>
+                        <option value="{{ animal.id }}">{{ animal.nome }}</option>
                     {% endfor %}
                 </select><br>
 

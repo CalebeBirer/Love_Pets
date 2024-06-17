@@ -9,9 +9,9 @@
 }
 
 :root {
-    --bg-color: #ffffff;
+    --bg-color: hsl(0, 0%, 100%);
     --text-color: #111111;
-    --main-color: #dabb40;
+    --main-color: #ecb43a;
     --big-font: 4.5rem;
     --h2-font: 3.3rem;
     --h3-font: 2rem;
