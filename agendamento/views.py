@@ -7,6 +7,37 @@ from .models import Agendamento, Servico
 from cliente.models import Animal, Client
 
 @login_required
+def criar_servico(request):
+    if request.user.cargo != 'W':
+        messages.add_message(request, messages.ERROR, 'Você não tem permissão para acessar esta página.')
+        return redirect('inicio')  # Redireciona para a página inicial ou outra página apropriada
+    
+    if request.method == "GET":
+        return render(request, 'servico.html')
+    elif request.method == "POST":
+        nome_servico = request.POST.get('nome_servico')
+        descricao = request.POST.get('descricao')
+        duracao = request.POST.get('duracao')
+
+        if not nome_servico or not descricao or not duracao:
+            messages.add_message(request, messages.ERROR, 'Todos os campos são obrigatórios.')
+            return redirect(reverse('criar_servico'))
+
+        try:
+            # Converte a duração para um objeto timedelta
+            hours, minutes = map(int, duracao.split(':'))
+            duracao_timedelta = timedelta(hours=hours, minutes=minutes)
+
+            servico = Servico(nome=nome_servico, descricao=descricao, duracao=duracao_timedelta)
+            servico.save()  # Salva o serviço no banco de dados
+
+            messages.add_message(request, messages.SUCCESS, 'Serviço cadastrado com sucesso.')
+            return redirect(reverse('criar_servico'))
+        except ValueError:
+            messages.add_message(request, messages.ERROR, 'Formato de duração inválido.')
+            return redirect(reverse('criar_servico'))
+
+@login_required
 def agendar_servico(request):
     try:
         client = get_object_or_404(Client, user=request.user)

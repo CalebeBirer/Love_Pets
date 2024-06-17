@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block 'body' %}
-
 <section class="brand"> 
     {% if messages %}
     <br>
@@ -54,10 +53,9 @@
                 <textarea id="observacao" name="observacao" class="form-control"></textarea>
                 <br>
 
-                <input type="submit" class="btn-success" value="Agendar">
+                <input type="submit" name="submit_agendamento" class="btn-success" value="Agendar">
             </form>
         {% endif %}
     </div>
 </section>
-
 {% endblock %}
