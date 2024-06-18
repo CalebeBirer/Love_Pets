@@ -471,7 +471,8 @@ label {
     display: inline-block;
     padding: 13px 25px;
     background: var(--main-color);
-    color: var(--bg-color);
+    /* color: var(--bg-color); */
+    color: black;
     font-size: 15px;
     letter-spacing: 1px;
     font-weight: 600;
@@ -481,7 +482,7 @@ label {
 
 .btn:hover {
     transform: translateY(-5px);
-    background: var(--text-colos);
+    /* background: var(--text-colos); */
 }
 
 header.sticky {

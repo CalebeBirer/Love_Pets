@@ -14,8 +14,25 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = Users
         fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['cpf', 'telefone', 'sexo', 'cep', 'estado', 'bairro', 'numero', 'complemento']
+        widgets = {
+            'cpf': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+            'sexo': forms.Select(attrs={'class': 'form-control'}),
+            'cep': forms.TextInput(attrs={'class': 'form-control'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'bairro': forms.TextInput(attrs={'class': 'form-control'}),
+            'numero': forms.TextInput(attrs={'class': 'form-control'}),
+            'complemento': forms.TextInput(attrs={'class': 'form-control'}),
+        }
