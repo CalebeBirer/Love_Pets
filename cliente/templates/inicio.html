@@ -15,7 +15,9 @@
         <div class="home-text">
             <h1>Estetica Animal<br><span>LOVE PETS</span></h1>
             <p>Onde o amor pelos animais encontra <br> praticidade e qualidade</p>
-            <a href="{% url 'criar_agenda' %}" class="btn">Agendar</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'criar_agenda' %}" class="btn">Agendar</a>
+            {% endif %}
         </div>
     </section>
 {% endblock %}

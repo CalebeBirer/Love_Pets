@@ -53,12 +53,20 @@
                                                     <input type="hidden" name="action" value="finalizar">
                                                     <input type="submit" class="btn-success" value="Finalizar">
                                                 </form>
+
+                                                <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                                    <input type="hidden" name="action" value="cancelar">
+                                                    <input type="submit" class="btn-danger" value="Cancelar">
+                                                </form>
                                             {% endif %}
+                                            
                                             <form method="POST" action="{% url 'listar_agendamentos' %}">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
-                                                <input type="hidden" name="action" value="cancelar">
-                                                <input type="submit" class="btn-danger" value="Cancelar">
+                                                <input type="hidden" name="action" value="reabrir">
+                                                <input type="submit" class="btn-edit" value="Reabrir">
                                             </form>
                                         </td>
                                     {% endif %}

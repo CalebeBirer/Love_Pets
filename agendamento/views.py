@@ -158,7 +158,12 @@ def listar_agendamentos(request):
 
             elif action == 'cancelar':
                 agendamento.delete()
-                messages.success(request, 'Agendamento cancelado com sucesso.')
+                messages.error(request, 'Agendamento cancelado com sucesso.')
+
+            elif action == 'reabrir':
+                agendamento.finalizado = False
+                agendamento.save()
+                messages.success(request, 'Agendamento aberto com sucesso.')
 
         except Exception as e:
             messages.error(request, f'Erro ao processar agendamento: {e}')
