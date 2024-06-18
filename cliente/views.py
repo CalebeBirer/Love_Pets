@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-
+from .forms import UserForm, ClientForm
 
 def inicio(request):
     return render(request, '../templates/inicio.html')
@@ -51,7 +51,7 @@ def login(request):
         if request.user.is_authenticated:
             # redirect redireciona para a pagina desejada e o reverse tranforma o nome em um URL
             messages.add_message(request, messages.ERROR, 'Usuario ja logado')
-            return redirect(reverse('register_client')) 
+            return redirect(reverse('listar_editar_usuario')) 
         return render(request, 'login.html')
     elif request.method == "POST": 
         login = request.POST.get('email')
@@ -147,3 +147,31 @@ def register_client_info(request):
         'sexo_choices': sexo_choices
     }
     return render(request, 'register_client_info.html', context)
+
+def listar_editar_usuario(request):
+    try:
+        client = Client.objects.get(user=request.user)
+        user = request.user
+    except Client.DoesNotExist:
+        messages.error(request, 'Cliente não encontrado.')
+        return redirect('inicio')
+
+    if request.method == 'POST':
+        client_form = ClientForm(request.POST, instance=client)
+        user_form = UserForm(request.POST, instance=user)
+
+        if client_form.is_valid() and user_form.is_valid():
+            client_form.save()
+            user_form.save()
+            messages.success(request, 'Dados atualizados com sucesso!')
+            return redirect('listar_editar_usuario')
+    else:
+        client_form = ClientForm(instance=client)
+        user_form = UserForm(instance=user)
+
+    context = {
+        'client_form': client_form,
+        'user_form': user_form,
+        'client': client
+    }
+    return render(request, 'listar_usuario.html', context)

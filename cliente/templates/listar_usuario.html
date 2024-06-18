@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+<section class="brand">
+    {% if messages %}
+        <div id="messages">
+            <br>
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="login">
+        <h2>Informações do Usuário</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            {{ client_form.as_p }}
+            <input type="submit" class="btn-success" value="Atualizar Dados">
+        </form>
+    </div>
+</section>
+{% endblock %}
