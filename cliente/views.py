@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, ClientForm
+from .forms import UserForm, ClientForm, AnimalForm
 
 def inicio(request):
     return render(request, '../templates/inicio.html')
@@ -46,6 +46,7 @@ def register_client(request):
         messages.add_message(request, messages.SUCCESS, 'Usuario cadastrado com sucesso')
         return redirect(reverse('login'))
 
+
 def login(request):
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -72,6 +73,7 @@ def logout(request):
     request.session.flush()
     messages.add_message(request, messages.WARNING, 'Logout efetuado com sucesso')
     return redirect(reverse('login'))
+
 
 @login_required
 def register_pet(request):
@@ -175,3 +177,44 @@ def listar_editar_usuario(request):
         'client': client
     }
     return render(request, 'listar_usuario.html', context)
+
+
+@login_required
+def listar_pets(request):
+    try:
+        client = Client.objects.get(user=request.user)
+        pets = Animal.objects.filter(client=client)
+    except Client.DoesNotExist:
+        messages.error(request, 'Cliente não encontrado.')
+        return redirect('inicio')
+
+    context = {
+        'pets': pets,
+    }
+    return render(request, 'list_pets.html', context)
+
+
+@login_required
+def edit_pet(request, pet_id):
+    try:
+        client = Client.objects.get(user=request.user)
+    except Client.DoesNotExist:
+        messages.error(request, 'Cliente não encontrado.')
+        return redirect('inicio')
+
+    animal = get_object_or_404(Animal, id=pet_id, client=client)
+
+    if request.method == 'POST':
+        pet_form = AnimalForm(request.POST, instance=animal)
+
+        if pet_form.is_valid():
+            pet_form.save()
+            messages.success(request, 'Dados do pet atualizados com sucesso!')
+            return redirect('listar_pets')
+    else:
+        pet_form = AnimalForm(instance=animal)
+
+    context = {
+        'pet_form': pet_form,
+    }
+    return render(request, 'edit_pet.html', context)

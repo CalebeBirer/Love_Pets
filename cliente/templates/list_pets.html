@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+<section class="brand">
+    {% if messages %}
+    <br>
+    {% for message in messages %}
+    <div class="alert {{ message.tags }}"> {{ message }} </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="login">
+        <div class="agendamentos">
+            <h1><label>Seus Pets</label></h1>
+            {% if pets %}
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Raça</th>
+                            <th>Tipo de Pelo</th>
+                            <th>Porte</th>
+                            <th>Ações</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pet in pets %}
+                        <tr>
+                            <td>{{ pet.nome }}</td>
+                            <td>{{ pet.raca }}</td>
+                            <td>{{ pet.get_tipo_pelo_display }}</td>
+                            <td>{{ pet.get_porte_display }}</td>
+                            <td>
+                                <a href="{% url 'edit_pet' pet.id %}" class="btn btn-success">Editar</a>
+                                <a href="{% url 'edit_pet' pet.id %}" class="btn btn-danger">Apagar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <a href="{% url 'register_pet' %}" class="btn-success">Voltar</a>
+        </div>
+</section>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import forms as auth_forms  
-from .models import Users, Client
+from .models import Users, Client, Animal
 
 class UserChangeForm(auth_forms.UserChangeForm):
     class Meta(auth_forms.UserChangeForm.Meta):
@@ -35,4 +35,16 @@ class ClientForm(forms.ModelForm):
             'bairro': forms.TextInput(attrs={'class': 'form-control'}),
             'numero': forms.TextInput(attrs={'class': 'form-control'}),
             'complemento': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class AnimalForm(forms.ModelForm):
+    class Meta:
+        model = Animal
+        fields = ['nome', 'raca', 'tipo_pelo', 'porte']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'raca': forms.TextInput(attrs={'class': 'form-control'}),
+            'tipo_pelo': forms.Select(attrs={'class': 'form-control'}),
+            'porte': forms.Select(attrs={'class': 'form-control'}),
         }
