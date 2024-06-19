@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from .models import Users, Animal, Client
+from agendamento.models import Agendamento
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib import auth
@@ -65,8 +65,7 @@ def login(request):
             return redirect(reverse('login'))
         
         auth.login(request,user)
-        messages.add_message(request, messages.SUCCESS, 'Usuario logado com Sucesso')
-        messages.add_message(request, messages.SUCCESS, 'Cadastre seu Pet na aba Pets')
+        messages.add_message(request, messages.SUCCESS, 'Usuario logado com Sucesso')        
         return redirect(reverse('login'))
     
 def logout(request):
@@ -140,7 +139,7 @@ def register_client_info(request):
         client.save()
         
         messages.success(request, 'Dados complementares cadastrados com sucesso')
-        return redirect('inicio')
+        return redirect('register_client_info')
     
     estados_choices = Client._meta.get_field('estado').choices
     sexo_choices = Client._meta.get_field('sexo').choices
@@ -156,7 +155,7 @@ def listar_editar_usuario(request):
         user = request.user
     except Client.DoesNotExist:
         messages.error(request, 'Cliente não encontrado.')
-        return redirect('inicio')
+        return redirect('register_client_info')
 
     if request.method == 'POST':
         client_form = ClientForm(request.POST, instance=client)
@@ -183,7 +182,7 @@ def listar_editar_usuario(request):
 def listar_pets(request):
     try:
         client = Client.objects.get(user=request.user)
-        pets = Animal.objects.filter(client=client)
+        pets = Animal.objects.filter(client=client, ativo=True)
     except Client.DoesNotExist:
         messages.error(request, 'Cliente não encontrado.')
         return redirect('inicio')
@@ -218,3 +217,28 @@ def edit_pet(request, pet_id):
         'pet_form': pet_form,
     }
     return render(request, 'edit_pet.html', context)
+
+@login_required
+def delete_pet(request, pet_id):
+    try:
+        client = Client.objects.get(user=request.user)
+    except Client.DoesNotExist:
+        messages.error(request, 'Cliente não encontrado.')
+        return redirect('inicio')
+
+    animal = get_object_or_404(Animal, id=pet_id, client=client)
+
+    if request.method == 'POST':
+        if Agendamento.objects.filter(id_animal=animal).exists():            
+            animal.ativo = False
+            animal.save()
+            messages.success(request, 'Pet inativado com sucesso!')
+        else:
+            animal.delete()
+            messages.success(request, 'Pet apagado com sucesso!')
+        return redirect('listar_pets')
+
+    context = {
+        'animal': animal,
+    }
+    return render(request, 'delete_pet.html', context)

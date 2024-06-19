@@ -24,6 +24,9 @@
                             <th>Porte</th>
                             <th>Ações</th>
                             {% endif %}
+                            {% if not pets %}
+                            <h1>Opss... Parece que não há pets cadastrados</h1>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +38,7 @@
                             <td>{{ pet.get_porte_display }}</td>
                             <td>
                                 <a href="{% url 'edit_pet' pet.id %}" class="btn btn-success">Editar</a>
-                                <a href="{% url 'edit_pet' pet.id %}" class="btn btn-danger">Apagar</a>
+                                <a href="{% url 'delete_pet' pet.id %}" class="btn btn-danger">Apagar</a>
                             </td>
                         </tr>
                         {% endfor %}

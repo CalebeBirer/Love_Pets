@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .models import Agendamento, Servico
 from cliente.models import Animal, Client
+from django.db.models import Q
 
 @login_required
 def criar_servico(request):
@@ -37,17 +38,19 @@ def criar_servico(request):
             messages.add_message(request, messages.ERROR, 'Formato de duração inválido.')
             return redirect(reverse('criar_servico'))
 
+
+
 @login_required
 def agendar_servico(request):
     try:
         client = get_object_or_404(Client, user=request.user)
-        animais = Animal.objects.filter(client=client)
-    except Client.DoesNotExist:
+        animais = Animal.objects.filter(client=client, ativo=True)
+        if not animais.exists():
+            messages.error(request, 'Você não tem nenhum animal ativo cadastrado. Por favor, cadastre um pet.')
+            return redirect('register_pet')
+    except Exception as e:
         messages.error(request, 'Cliente não encontrado. Por favor, registre suas informações de cliente primeiro.')
         return redirect('register_client_info')
-    except Exception as e:
-        messages.error(request, f'Erro ao obter informações do cliente: {e}')
-        animais = []
 
     try:
         servicos = Servico.objects.all()
@@ -92,13 +95,14 @@ def agendar_servico(request):
                 horario_inicio = datetime.combine(data, horario)
                 horario_fim = horario_inicio + duracao
 
-                # Verificar se o horário está disponível
+                # Verificar se o horário está disponível para qualquer animal
                 agendamentos_existentes = Agendamento.objects.filter(
-                    id_animal=animal,
                     data=data
-                ).exclude(
-                    horario__gte=horario_fim.time(),
-                    horario__lt=(horario_inicio - duracao).time()
+                ).filter(
+                    Q(horario__lt=horario_fim.time(), horario__gte=horario_inicio.time()) |
+                    Q(horario__lt=horario_fim.time(), horario__gte=horario_inicio.time()) |
+                    Q(horario__gte=horario_inicio.time(), horario__lt=horario_fim.time()) |
+                    Q(horario__gte=horario_inicio.time(), horario__lt=horario_fim.time())
                 )
 
                 if agendamentos_existentes.exists():
@@ -124,7 +128,7 @@ def agendar_servico(request):
             except Exception as e:
                 messages.error(request, f'Erro ao agendar serviço: {e}')
 
-    return render(request, '../templates/agenda.html', {
+    return render(request, 'agenda.html', {
         'animais': animais,
         'servicos': servicos,
         'horarios_disponiveis': horarios_disponiveis,
@@ -141,6 +145,7 @@ def calcular_horarios_disponiveis(data, duracao):
         horario_atual += duracao
 
     return horarios_disponiveis
+
 
 @login_required
 def listar_agendamentos(request):

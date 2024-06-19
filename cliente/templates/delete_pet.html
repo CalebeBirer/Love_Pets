@@ -13,14 +13,14 @@
     {% endif %}
 
     <div class="login">
-        <h2>Editar Cadastro do Pet</h2>
+        <h2>Confirmar Exclusão do Pet</h2>
+        <h3>Tem certeza de que deseja apagar o pet {{ animal.nome }}?<h3>
+        <br>
         <form method="POST">
             {% csrf_token %}
-            {{ pet_form.as_p }}
-            <input type="submit" class="btn-success" value="Atualizar Dados">
+            <button type="submit" class="btn-danger">Apagar</button>
+            <a href="{% url 'listar_pets' %}" class="btn-success">Cancelar</a>
         </form>
-        
-        <a href="{% url 'listar_pets' %}" class="btn-danger">Cancelar</a>
     </div>
 </section>
 {% endblock %}

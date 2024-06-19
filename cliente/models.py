@@ -38,6 +38,7 @@ class Animal(models.Model):
                      ('G', 'Grande'))
     porte = models.CharField(max_length=1, choices=choices_porte, default='P')
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    ativo = models.BooleanField(default=True) 
 
     def __str__(self):
         return self.nome

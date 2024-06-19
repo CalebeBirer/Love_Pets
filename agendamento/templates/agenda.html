@@ -45,7 +45,9 @@
                 <label for="id_animal">Animal:</label>
                 <select id="id_animal" name="id_animal" required class="form-control">
                     {% for animal in animais %}
-                        <option value="{{ animal.id }}">{{ animal.nome }}</option>
+                        {% if animal.ativo %}
+                            <option value="{{ animal.id }}">{{ animal.nome }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select><br>
 

@@ -2,81 +2,81 @@
 {% load static %}
 
 {% block 'body' %}
-<section class="brand"> 
+<section class="brand">
     {% if messages %}
     <br>
-        {% for message in messages %}
-            <div class="alert {{ message.tags }}"> {{ message }} </div>
-        {% endfor %}
+    {% for message in messages %}
+    <div class="alert {{ message.tags }}"> {{ message }} </div>
+    {% endfor %}
     {% endif %}
 
     <div class="login">
         <div class="agendamentos">
             <h1><label>Todos os Agendamentos</label></h1>
             {% if agendamentos %}
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Horário</th>
-                                <th>Serviço</th>
-                                <th>Animal</th>
-                                <th>Observação</th>
-                                <th>Status</th>
-                                {% if user.cargo == 'W' %}
-                                    <th>Ações</th>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Serviço</th>
+                            <th>Animal</th>
+                            <th>Observação</th>
+                            <th>Status</th>
+                            {% if user.cargo == 'W' %}
+                            <th>Ações</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agendamento in agendamentos %}
+                        <tr>
+                            <td>{{ agendamento.data }}</td>
+                            <td>{{ agendamento.horario }}</td>
+                            <td>{{ agendamento.id_servico.nome }}</td>
+                            <td>{{ agendamento.id_animal.nome }}</td>
+                            <td>{{ agendamento.observacao }}</td>
+                            <td>
+                                {% if agendamento.finalizado %}
+                                Finalizado
+                                {% else %}
+                                Pendente
                                 {% endif %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for agendamento in agendamentos %}
-                                <tr>
-                                    <td>{{ agendamento.data }}</td>
-                                    <td>{{ agendamento.horario }}</td>
-                                    <td>{{ agendamento.id_servico.nome }}</td>
-                                    <td>{{ agendamento.id_animal.nome }}</td>
-                                    <td>{{ agendamento.observacao }}</td>
-                                    <td>
-                                        {% if agendamento.finalizado %}
-                                            Finalizado
-                                        {% else %}
-                                            Pendente
-                                        {% endif %}
-                                    </td>
-                                    {% if user.cargo == 'W' %}
-                                        <td>
-                                            {% if not agendamento.finalizado %}
-                                                <form method="POST" action="{% url 'listar_agendamentos' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
-                                                    <input type="hidden" name="action" value="finalizar">
-                                                    <input type="submit" class="btn-success" value="Finalizar">
-                                                </form>
+                            </td>
+                            <td>
+                                {% if not agendamento.finalizado %}
+                                <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                    <input type="hidden" name="action" value="cancelar">
+                                    <input type="submit" class="btn-danger" value="Cancelar">
+                                </form>
+                                {% endif %}
 
-                                                <form method="POST" action="{% url 'listar_agendamentos' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
-                                                    <input type="hidden" name="action" value="cancelar">
-                                                    <input type="submit" class="btn-danger" value="Cancelar">
-                                                </form>
-                                            {% endif %}
-                                            
-                                            <form method="POST" action="{% url 'listar_agendamentos' %}">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
-                                                <input type="hidden" name="action" value="reabrir">
-                                                <input type="submit" class="btn-edit" value="Reabrir">
-                                            </form>
-                                        </td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                {% if user.cargo == 'W' %}
+                                <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                    <input type="hidden" name="action" value="finalizar">
+                                    <input type="submit" class="btn-success" value="Finalizar">
+                                </form>                                
+
+                                <form method="POST" action="{% url 'listar_agendamentos' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="agendamento_id" value="{{ agendamento.id }}">
+                                    <input type="hidden" name="action" value="reabrir">
+                                    <input type="submit" class="btn-edit" value="Reabrir">
+                                </form>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% else %}
-                <p>Não há agendamentos cadastrados.</p>
+            <p>Não há agendamentos cadastrados.</p>
             {% endif %}
         </div>
     </div>
