@@ -1,8 +1,6 @@
 from pathlib import Path
 import os
 from django.contrib.messages import constants
-from dotenv import load_dotenv
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,7 +16,6 @@ SECRET_KEY = 'django-insecure-tikt*p6@4ov9$7djog==$stm($7*rrs3dria55x7btdkdsk0^6
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -70,12 +67,12 @@ WSGI_APPLICATION = 'love_pets.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'love_pets',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   
+        'PORT': '3306',
     }
 }
 
