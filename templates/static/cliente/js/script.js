@@ -32,9 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
         reset: true
     });
 
-    // sr.reveal('.home-text', { delay: 280, origin: 'bottom' });
-    // sr.reveal('.featured, .cta, .new, .brand, .contact', { delay: 200, origin: 'bottom' });
-
     // Esconde as mensagens de sucesso após 5 segundos
     setTimeout(function() {
         var messages = document.querySelectorAll('.alert');
@@ -43,4 +40,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000); // 5000 milissegundos = 5 segundos
 });
-

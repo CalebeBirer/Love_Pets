@@ -42,6 +42,9 @@ def criar_servico(request):
 
 @login_required
 def agendar_servico(request):
+    """
+    View para agendar um serviço para um animal de estimação.
+    """
     try:
         client = get_object_or_404(Client, user=request.user)
         animais = Animal.objects.filter(client=client, ativo=True)
@@ -59,63 +62,54 @@ def agendar_servico(request):
         servicos = []
 
     horarios_disponiveis = []
+    data = request.POST.get('data', '')
+    id_servico = request.POST.get('id_servico', '')
+
     if request.method == 'POST':
         if 'submit_horarios' in request.POST:
-            data_str = request.POST.get('data')
-            id_servico = request.POST.get('id_servico')
-
             try:
-                data = datetime.strptime(data_str, '%Y-%m-%d').date()
+                data = request.POST.get('data')
                 servico = Servico.objects.get(id=id_servico)
                 duracao = servico.duracao
 
                 # Calcular horários disponíveis com base na duração do serviço
-                horarios_disponiveis = calcular_horarios_disponiveis(data, duracao)
+                data_obj = datetime.strptime(data, '%Y-%m-%d').date()
+                horarios_disponiveis = calcular_horarios_disponiveis(data_obj, duracao)
 
             except Servico.DoesNotExist:
                 messages.error(request, 'Serviço não encontrado.')
             except Exception as e:
                 messages.error(request, f'Erro ao calcular horários disponíveis: {e}')
         elif 'submit_agendamento' in request.POST:
-            data_str = request.POST.get('data')
             horario_str = request.POST.get('horario')
             observacao = request.POST.get('observacao')
             id_animal = request.POST.get('id_animal')
-            id_servico = request.POST.get('id_servico')
 
             try:
-                data = datetime.strptime(data_str, '%Y-%m-%d').date()
-                horario = datetime.strptime(horario_str, '%H:%M').time()
+                data = request.POST.get('data')
+                horario_inicio = datetime.strptime(horario_str, '%H:%M').time()
 
                 animal = Animal.objects.get(id=id_animal, client=client)
                 servico = Servico.objects.get(id=id_servico)
                 duracao = servico.duracao
 
                 # Calcular o horário de término
-                horario_inicio = datetime.combine(data, horario)
-                horario_fim = horario_inicio + duracao
+                data_obj = datetime.strptime(data, '%Y-%m-%d').date()
+                horario_fim = (datetime.combine(data_obj, horario_inicio) + duracao).time()
 
                 # Verificar se o horário está disponível para qualquer animal
-                agendamentos_existentes = Agendamento.objects.filter(
-                    data=data
-                ).filter(
-                    Q(horario__lt=horario_fim.time(), horario__gte=horario_inicio.time()) |
-                    Q(horario__lt=horario_fim.time(), horario__gte=horario_inicio.time()) |
-                    Q(horario__gte=horario_inicio.time(), horario__lt=horario_fim.time()) |
-                    Q(horario__gte=horario_inicio.time(), horario__lt=horario_fim.time())
-                )
-
-                if agendamentos_existentes.exists():
+                if not is_horario_disponivel(data_obj, horario_inicio, horario_fim):
                     messages.error(request, 'Já existe um agendamento para este horário.')
                     return redirect(reverse('criar_agenda'))
 
                 agendamento = Agendamento(
-                    data=data,
-                    horario=horario,
+                    data=data_obj,
+                    horario_inicio=horario_inicio,
+                    horario_fim=horario_fim,
                     observacao=observacao,
-                    id_animal=animal,
-                    id_cliente=request.user,
-                    id_servico=servico,
+                    animal=animal,
+                    cliente=request.user,
+                    servico=servico,
                     finalizado=False
                 )
                 agendamento.save()
@@ -132,11 +126,21 @@ def agendar_servico(request):
         'animais': animais,
         'servicos': servicos,
         'horarios_disponiveis': horarios_disponiveis,
-        'data': request.POST.get('data') if request.method == 'POST' else '',
-        'id_servico': request.POST.get('id_servico') if request.method == 'POST' else ''
+        'data': data,
+        'id_servico': id_servico
     })
 
+
+
+
 def calcular_horarios_disponiveis(data, duracao):
+    """
+    Calcula os horários disponíveis para agendamento com base na duração do serviço.
+    
+    :param data: Data para a qual os horários são calculados.
+    :param duracao: Duração do serviço como um objeto timedelta.
+    :return: Lista de horários disponíveis.
+    """
     horarios_disponiveis = []
     horario_atual = datetime.combine(data, time(8, 0))  # Começa às 08:00
 
@@ -145,6 +149,29 @@ def calcular_horarios_disponiveis(data, duracao):
         horario_atual += duracao
 
     return horarios_disponiveis
+
+
+
+def is_horario_disponivel(data, horario_inicio, horario_fim):
+    """
+    Verifica se o intervalo de tempo está disponível para agendamento.
+    
+    :param data: Data do agendamento.
+    :param horario_inicio: Horário de início do agendamento.
+    :param horario_fim: Horário de término do agendamento.
+    :return: True se o intervalo está disponível, False caso contrário.
+    """
+    agendamentos_existentes = Agendamento.objects.filter(
+        data=data
+    ).filter(
+        Q(horario_inicio__lt=horario_fim, horario_fim__gt=horario_inicio)
+    )
+
+    return not agendamentos_existentes.exists()
+
+
+
+
 
 
 @login_required
@@ -175,9 +202,9 @@ def listar_agendamentos(request):
 
     try:
         if request.user.cargo == 'W':  # Verifica se o usuário tem o cargo 'W'
-            agendamentos = Agendamento.objects.all().order_by('-data', '-horario')
+            agendamentos = Agendamento.objects.all().order_by('-data', '-horario_inicio')
         else:  # Assumimos que qualquer outro cargo, especialmente 'C', deve visualizar apenas seus agendamentos
-            agendamentos = Agendamento.objects.filter(id_cliente=request.user).order_by('-data', '-horario')
+            agendamentos = Agendamento.objects.filter(id_cliente=request.user).order_by('-data', '-horario_inicio')
     except Exception as e:
         messages.error(request, f'Erro ao obter agendamentos: {e}')
         agendamentos = []

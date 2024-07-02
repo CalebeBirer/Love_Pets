@@ -21,96 +21,80 @@
     <title>{% block 'title' %}{% endblock %}</title>
 </head>
 
-<body class="fundo">
-
-    <!---header--->
-    <header>
-        <div class="img-navlist">
-            <img src="{% static 'cliente/img/logo_nav_bar_2.png' %}">
-        </div>
-        <ul class="navlist">
-            <li><a href="{% url 'inicio' %}">Home</a></li>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'criar_agenda' %}">Agenda</a></li>
-                <li><a href="{% url 'register_pet' %}">Pets</a></li>
-                <li><a href="{% url 'listar_agendamentos' %}">Minha Agenda</a></li>
-                {% if user.cargo == 'W' %}
-                    <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
-                {% endif %}
-            {% else %}
-                <li><a href="{% url 'register_client' %}">Agenda</a></li>
-                <li><a href="{% url 'register_client' %}">Pets</a></li>
-            {% endif %}
-        </ul>        
-
-        <div class="header-icons">
-            <div class="icon-container">
-                <div class="navlist">
-                    <a href="{% url 'login' %}">Entre
-                        <i class='bx bx-user-circle'></i>
-                    </a>
-                    <a href="{% url 'register_client' %}">Cadastro
-                        <i class='bx bx-user-plus'></i>
-                    </a>
-                    <a href="{% url 'logout' %}">Sair
-                        <i class='bx bxs-door-open'></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!---HOME--->
     {% block 'home' %}
 
     {% endblock %}
-    
 
-    {% block 'body' %}
+    <body class="fundo">
 
-    {% endblock %}
-
-    <!---contact--->
-    <section class="contact" id="contact">
-        <div class="main-contact">
-            <h3>Love Pets</h3>
-            <h5>A Love Pets oferece um serviço de banho e tosa na porta da sua casa,<br> 
-                utilizando a sua água e energia para maior conveniência.</h5>
-
-            <div class="icons">
-                <a href="https://api.whatsapp.com/send?phone=5519997895246&text=Ol%C3%A1+quero+fazer+um+agendamento"><i
-                        class='bx bx-message-detail'></i></a>
-                <a href="https://www.instagram.com/lovepets.ma/"><i
-                        class='bx bxl-instagram-alt'></i></a>
+        <!---header--->
+        <header>
+            <div class="img-navlist">
+                <img src="{% static 'cliente/img/logo_nav_bar_2.png' %}">
             </div>
-        </div>
-
-        <div class="main-contact">
-            <h3>Explore</h3>
-            <ul class="Contact">
-                <li><a href="{% url 'inicio'%}">Home</a></li>
-                <li><a href="{% url 'criar_agenda'%}">Agenda</a></li>
-                <li><a href="{% url 'register_pet'%}"> Cadastre seu Pet</a></li>
-                <li><a href="{% url 'listar_agendamentos'%}"> Meus Agendamentos</a></li>
-            </ul>
-        </div>
-
-        <div class="main-contact">
-            <h3>Nosso serviço</h3>
-            <li><a href="#">Banho</a></li>
-            <li><a href="#">Tosas</a></li>
-            <li><a href="#">hidratação</a></li>
-        </div>
-        <div class="last-text">
-            <p>Copyright © 2024 All rights reserved | This template is made with by Victor Sims And Calebe Birer</p>
-        </div>
-    </section>
+            <i class='bx bx-menu' id="menu-icon"></i> <!-- Ícone de menu -->
     
-    <script src="https://unpkg.com/scrollreveal"></script>
-
-    <!---custom js link --->
-    <script src="{% static 'cliente/js/script.js' %}"></script>
-
-</body>
-
-</html>
+            <ul class="navlist">
+                <li><a href="{% url 'inicio' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'criar_agenda' %}">Agenda</a></li>
+                    <li><a href="{% url 'register_pet' %}">Pets</a></li>
+                    <li><a href="{% url 'listar_agendamentos' %}">Minha Agenda</a></li>
+                    {% if user.cargo == 'W' %}
+                        <li><a href="{% url 'criar_servico' %}">Serviço</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'register_client' %}">Agenda</a></li>
+                    <li><a href="{% url 'register_client' %}">Pets</a></li>
+                {% endif %}
+                <li><a href="{% url 'login' %}">Entre <i class='bx bx-user-circle'></i></a></li>
+                <li><a href="{% url 'register_client' %}">Cadastro <i class='bx bx-user-plus'></i></a></li>
+                <li><a href="{% url 'logout' %}">Sair <i class='bx bxs-door-open'></i></a></li>
+            </ul>        
+        </header>
+    
+        {% block 'body' %}
+        {% endblock %}
+    
+        <!---contact--->
+        <section class="contact" id="contact">
+            <div class="main-contact">
+                <h3>Love Pets</h3>
+                <h5>A Love Pets oferece um serviço de banho e tosa na porta da sua casa,<br> 
+                    utilizando a sua água e energia para maior conveniência.</h5>
+    
+                <div class="icons">
+                    <a href="https://api.whatsapp.com/send?phone=5519997895246&text=Ol%C3%A1+quero+fazer+um+agendamento"><i
+                            class='bx bx-message-detail'></i></a>
+                    <a href="https://www.instagram.com/lovepets.ma/"><i
+                            class='bx bxl-instagram-alt'></i></a>
+                </div>
+            </div>
+    
+            <div class="main-contact">
+                <h3>Explore</h3>
+                <ul class="Contact">
+                    <li><a href="{% url 'inicio' %}">Home</a></li>
+                    <li><a href="{% url 'criar_agenda' %}">Agenda</a></li>
+                    <li><a href="{% url 'register_pet' %}"> Cadastre seu Pet</a></li>
+                    <li><a href="{% url 'listar_agendamentos' %}"> Meus Agendamentos</a></li>
+                </ul>
+            </div>
+    
+            <div class="main-contact">
+                <h3>Nosso serviço</h3>
+                <li><a href="#">Banho</a></li>
+                <li><a href="#">Tosas</a></li>
+                <li><a href="#">hidratação</a></li>
+            </div>
+            <div class="last-text">
+                <p>Copyright © 2024 All rights reserved | This template is made with by Victor Sims And Calebe Birer</p>
+            </div>
+        </section>
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+    
+        <!---custom js link --->
+        <script src="{% static 'cliente/js/script.js' %}"></script>
+    </body>
+    </html>
