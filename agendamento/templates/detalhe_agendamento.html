@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'body' %}
+<section class="agendamento">
+    <div class="login-agendamento">
+        <h1>Detalhes do Agendamento</h1>
+        <p class="form-control-info"><strong>Data:</strong> {{ agendamento.data }}</p>
+        <p class="form-control-info"><strong>Horário:</strong> {{ agendamento.horario_inicio }}</p>
+        <p class="form-control-info"><strong>Serviço:</strong> {{ agendamento.servico.nome }}</p>
+        <p class="form-control-info"><strong>Animal:</strong> {{ agendamento.animal.nome }}</p>
+        <p class="form-control-info"><strong>Observação:</strong> {{ agendamento.observacao }}</p>
+        <p class="form-control-info"><strong>Status:</strong> {% if agendamento.finalizado %} Finalizado {% else %} Pendente {% endif %}</p>
+        <p class="form-control-info"><strong>Cliente:</strong> {{ agendamento.cliente.nome }}</p>
+        <p class="form-control-info"><strong>Bairro:</strong> {{ agendamento.cliente.bairro }}</p>
+        <p class="form-control-info"><strong>Número:</strong> {{ agendamento.cliente.numero }}</p>
+        <p class="form-control-info"><strong>Complemento:</strong> {{ agendamento.cliente.complemento }}</p>
+    </div>
+</section>
+{% endblock %}

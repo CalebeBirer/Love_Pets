@@ -156,6 +156,15 @@ header.sticky {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.login-agendamento {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: #5F2E73;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 /* Estilo para o formulário */
 form {
     margin-bottom: 20px;
@@ -175,6 +184,16 @@ label {
     border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.form-control-info {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
 }
 
 .form-control:focus {
@@ -374,6 +393,13 @@ label {
     padding: 200px 14%;
     /* background: #ffd79c; */
     background-color: #ffae00;
+}
+
+.agendamento {
+    padding: 200px 1%;
+    background-color: #ffae00;
+    width: 100%; /* Garante que a div ocupe 100% da largura do contêiner */
+    margin: 0 auto; /* Centraliza a div horizontalmente */
 }
 
 .main-contact li {

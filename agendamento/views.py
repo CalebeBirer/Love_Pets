@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import Agendamento, Servico
 from cliente.models import Animal, Client
 from django.db.models import Q
+from .forms import AgendamentoFilterForm 
 
 @login_required
 def criar_servico(request):
@@ -170,10 +171,6 @@ def is_horario_disponivel(data, horario_inicio, horario_fim):
     return not agendamentos_existentes.exists()
 
 
-
-
-
-
 @login_required
 def listar_agendamentos(request):
     if request.method == "POST":
@@ -201,12 +198,22 @@ def listar_agendamentos(request):
             messages.error(request, f'Erro ao processar agendamento: {e}')
 
     try:
-        if request.user.cargo == 'W':  # Verifica se o usuário tem o cargo 'W'
+        if request.user.cargo == 'W':
             agendamentos = Agendamento.objects.all().order_by('-data', '-horario_inicio')
-        else:  # Assumimos que qualquer outro cargo, especialmente 'C', deve visualizar apenas seus agendamentos
+        else:
             agendamentos = Agendamento.objects.filter(id_cliente=request.user).order_by('-data', '-horario_inicio')
     except Exception as e:
         messages.error(request, f'Erro ao obter agendamentos: {e}')
         agendamentos = []
 
-    return render(request, 'listar_agendamentos.html', {'agendamentos': agendamentos})
+    context = {
+        'agendamentos': agendamentos,
+        'form': AgendamentoFilterForm()  # Formulário para filtros
+    }
+    return render(request, 'listar_agendamentos.html', context)
+
+
+@login_required
+def detalhe_agendamento(request, agendamento_id):
+    agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+    return render(request, 'detalhe_agendamento.html', {'agendamento': agendamento})
