@@ -4,10 +4,11 @@ from django.contrib.auth.models import AbstractUser
 class Users(AbstractUser):
     choices_cargo = (('W', 'Owner'), ('C', 'Client'))
     cargo = models.CharField(max_length=1, choices=choices_cargo)
+    is_active = models.BooleanField(default=False) 
 
 class Client(models.Model):
-    cpf = models.CharField(max_length=11)
-    telefone = models.CharField(max_length=11)
+    cpf = models.CharField(max_length=14)
+    telefone = models.CharField(max_length=15, blank=False, null=False)
     choices_sexo = (('M', 'Masculino'), ('F', 'Feminino'))
     sexo = models.CharField(max_length=1, choices=choices_sexo)
     cep = models.CharField(max_length=11)
@@ -19,10 +20,11 @@ class Client(models.Model):
         ('RS', 'Rio Grande do Sul'), ('RO', 'Rondônia'), ('RR', 'Roraima'), ('SC', 'Santa Catarina'),
         ('SP', 'São Paulo'), ('SE', 'Sergipe'), ('TO', 'Tocantins'), ('DF', 'Distrito Federal')
     )
-    estado = models.CharField(max_length=2, choices=choices_estado, default='SP')
-    bairro = models.CharField(max_length=30)
-    numero = models.CharField(max_length=6)
-    complemento = models.CharField(max_length=30, blank=True, null=True)
+    estado = models.CharField(max_length=2, choices=choices_estado, default='SP', blank=False, null=False)
+    cidade = models.CharField(max_length=100, blank=False, null=False)
+    bairro = models.CharField(max_length=100, blank=False, null=False)
+    numero = models.CharField(max_length=10, blank=False, null=False)
+    complemento = models.CharField(max_length=100, blank=True, null=True)
     user = models.OneToOneField(Users, on_delete=models.CASCADE)
 
 

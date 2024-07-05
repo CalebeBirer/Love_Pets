@@ -13,46 +13,93 @@
     {% endif %}
     
     <div class="login">
-        <form action="{% url 'register_client_info' %}" method="POST">{% csrf_token %}
-            <br>
-            <label>CPF</label>
-            <input type="text" placeholder="Digite seu CPF...." name="cpf" class="form-control">
-            <br>
-            <label>Telefone</label>
-            <input type="text" placeholder="Digite seu Telefone...." name="telefone" class="form-control" maxlength="11">
-            <br>
-            <label>Sexo</label>
-            <select name="sexo" class="form-control">
-                {% for value, display in sexo_choices %}
-                    <option value="{{ value }}">{{ display }}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <label>CEP</label>
-            <input type="text" placeholder="Digite sua CEP...." name="cep" class="form-control">
-            <br>
-            <label>Cidade</label>
-            <input type="text" placeholder="Digite sua Cidade...." name="cidade" class="form-control">
-            <br>
-            <label>Estado</label>
-            <select name="estado" class="form-control">
-                {% for value, display in estados_choices %}
-                    <option value="{{ value }}">{{ display }}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <label>Bairro</label>
-            <input type="text" placeholder="Digite seu Bairro...." name="bairro" class="form-control">
-            <br>            
-            <label>Numero</label>
-            <input type="text" placeholder="Digite seu Numero...." name="numero" class="form-control" maxlength="10">
-            <br>            
-            <label>Complemento</label>
-            <input type="text" placeholder="Digite seu Complemento...." name="complemento" class="form-control" maxlength="10">
-            <br>
+        <form action="{% url 'register_client_info' %}" method="POST" id="clientForm">{% csrf_token %}
+            {{ form.as_p }}
             <input type="submit" class="btn-success">
         </form>
     </div>
 </section>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jQuery Mask Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function initializeMasksAndEvents() {
+            $('#cpf').mask('000.000.000-00', {placeholder: '___.___.___-__'});
+            $('#telefone').mask('(00) 00000-0000', {placeholder: '(__) _____-____'});
+            $('#cep').mask('00000-000', {placeholder: '_____-___'});
+
+            $('#cep').on('blur', function() {
+                consultarCEP($(this).val());
+            });
+
+            $('#estado').on('change', function() {
+                var estado = $(this).val();
+                if (estado) {
+                    $.getJSON(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`, function(data) {
+                        var options = '<option value="">Selecione a Cidade</option>';
+                        data.forEach(function(cidade) {
+                            options += `<option value="${cidade.nome}">${cidade.nome}</option>`;
+                        });
+                        $('#cidade').html(options);
+                    });
+                } else {
+                    $('#cidade').html('<option value="">Selecione o Estado primeiro</option>');
+                }
+            });
+
+            $('#clientForm').on('submit', function(event) {
+                var cep = $('#cep').val().replace(/\D/g, '');
+                if (cep && cep.length !== 8) {
+                    alert("CEP inválido. Por favor, verifique os dados e tente novamente.");
+                    event.preventDefault();
+                }
+            });
+        }
+
+        initializeMasksAndEvents();
+
+        function preencherEndereco(data) {
+            $('#bairro').val(data.bairro);
+            $('#cidade').val(data.localidade);
+            $('#estado').val(data.uf);
+            $('#complemento').val(data.complemento);
+        }
+
+        function consultarCEP(cep) {
+            cep = cep.replace(/\D/g, '');
+            if (cep !== "") {
+                var validacep = /^[0-9]{8}$/;
+                if (validacep.test(cep)) {
+                    $.getJSON(`https://viacep.com.br/ws/${cep}/json/`, function(data) {
+                        if (!("erro" in data)) {
+                            preencherEndereco(data);
+                        } else {
+                            alert("CEP não encontrado.");
+                        }
+                    });
+                } else {
+                    alert("Formato de CEP inválido.");
+                }
+            }
+        }
+
+        $.getJSON('https://servicodados.ibge.gov.br/api/v1/localidades/estados', function(data) {
+            var options = '<option value="">Selecione o Estado</option>';
+            data.forEach(function(estado) {
+                options += `<option value="${estado.sigla}">${estado.nome}</option>`;
+            });
+            $('#estado').html(options);
+
+            // Pré-selecionar o estado atual do cliente
+            var selectedEstado = "{{ client.estado|default:'' }}";
+            if (selectedEstado) {
+                $('#estado').val(selectedEstado).change();
+            }
+        });
+    });
+</script>
 
 {% endblock %}

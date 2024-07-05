@@ -21,21 +21,30 @@ class UserForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['cpf', 'telefone', 'sexo', 'cep', 'estado', 'bairro', 'numero', 'complemento']
+        fields = ['cpf', 'telefone', 'sexo', 'cep', 'estado', 'cidade', 'bairro', 'numero', 'complemento']
         widgets = {
-            'cpf': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control', 'id': 'cpf'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'id': 'telefone'}),
             'sexo': forms.Select(attrs={'class': 'form-control'}),
-            'cep': forms.TextInput(attrs={'class': 'form-control'}),
-            'estado': forms.Select(attrs={'class': 'form-control'}),
-            'bairro': forms.TextInput(attrs={'class': 'form-control'}),
+            'cep': forms.TextInput(attrs={'class': 'form-control', 'id': 'cep'}),
+            'estado': forms.Select(attrs={'class': 'form-control', 'id': 'estado'}),
+            'cidade': forms.TextInput(attrs={'class': 'form-control', 'id': 'cidade'}),
+            'bairro': forms.TextInput(attrs={'class': 'form-control', 'id': 'bairro'}),
             'numero': forms.TextInput(attrs={'class': 'form-control'}),
-            'complemento': forms.TextInput(attrs={'class': 'form-control'}),
+            'complemento': forms.TextInput(attrs={'class': 'form-control', 'id': 'complemento'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(ClientForm, self).__init__(*args, **kwargs)
+        self.fields['cep'].required = True
+        self.fields['complemento'].required = True
+        self.fields['cidade'].required = False
+        self.fields['estado'].required = False
+        self.fields['bairro'].required = False
+        self.fields['numero'].required = False
 
 
 class AnimalForm(forms.ModelForm):

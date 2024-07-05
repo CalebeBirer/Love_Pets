@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
 from django.contrib.messages import constants
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +18,7 @@ SECRET_KEY = 'django-insecure-tikt*p6@4ov9$7djog==$stm($7*rrs3dria55x7btdkdsk0^6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'lovepetsrc.com.br']
 
 # Application definition
 
@@ -68,11 +71,11 @@ WSGI_APPLICATION = 'love_pets.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'love_pets',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',   
-        'PORT': '3306',
+        'NAME': os.getenv("DATABASE_NAME"),
+        'USER': os.getenv("DATABASE_USER"),
+        'PASSWORD': os.getenv("DATABASE_PASSWORD"),
+        'HOST': os.getenv("DATABASE_HOST"),   
+        'PORT': os.getenv("DATABASE_PORT"),
     }
 }
 
@@ -134,3 +137,14 @@ MESSAGE_TAGS = {
     constants.INFO: 'alert-info',
     constants.WARNING: 'alert-warning',
 }
+
+# EMAIL CONFIGURAÇÕES
+EMAIL_BACKEND =os.getenv("EMAIL_BACKEND")
+EMAIL_HOST=os.getenv("EMAIL_HOST")
+EMAIL_PORT =os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS =os.getenv("EMAIL_USE_TLS")
+EMAIL_HOST_USER=os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD=os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL=os.getenv("DEFAULT_FROM_EMAIL")
+
+
