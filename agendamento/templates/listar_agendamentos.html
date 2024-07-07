@@ -53,7 +53,7 @@
                                 {% endif %}
                             </td>
                             {% if user.cargo == 'W' %}
-                            <td>{{ agendamento.cliente.nome }}</td>
+                            <td>{{ agendamento.cliente.first_name }}</td>
                             <td>
                                 <a href="{% url 'detalhe_agendamento' agendamento.id %}" class="btn-edit">Info</a>
                                 

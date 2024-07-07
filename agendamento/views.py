@@ -171,6 +171,47 @@ def is_horario_disponivel(data, horario_inicio, horario_fim):
     return not agendamentos_existentes.exists()
 
 
+# @login_required
+# def listar_agendamentos(request):
+#     if request.method == "POST":
+#         agendamento_id = request.POST.get('agendamento_id')
+#         action = request.POST.get('action')
+
+#         try:
+#             agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+
+#             if action == 'finalizar':
+#                 agendamento.finalizado = True
+#                 agendamento.save()
+#                 messages.success(request, 'Agendamento finalizado com sucesso.')
+
+#             elif action == 'cancelar':
+#                 agendamento.delete()
+#                 messages.error(request, 'Agendamento cancelado com sucesso.')
+
+#             elif action == 'reabrir':
+#                 agendamento.finalizado = False
+#                 agendamento.save()
+#                 messages.success(request, 'Agendamento aberto com sucesso.')
+
+#         except Exception as e:
+#             messages.error(request, f'Erro ao processar agendamento: {e}')
+
+#     try:
+#         if request.user.cargo == 'W':
+#             agendamentos = Agendamento.objects.all().order_by('-data', '-horario_inicio')
+#         else:
+#             agendamentos = Agendamento.objects.filter(id_cliente=request.user).order_by('-data', '-horario_inicio')
+#     except Exception as e:
+#         messages.error(request, f'Erro ao obter agendamentos: {e}')
+#         agendamentos = []
+
+#     context = {
+#         'agendamentos': agendamentos,
+#         'form': AgendamentoFilterForm()  # Formulário para filtros
+#     }
+#     return render(request, 'listar_agendamentos.html', context)
+
 @login_required
 def listar_agendamentos(request):
     if request.method == "POST":
@@ -192,28 +233,48 @@ def listar_agendamentos(request):
             elif action == 'reabrir':
                 agendamento.finalizado = False
                 agendamento.save()
-                messages.success(request, 'Agendamento aberto com sucesso.')
+                messages.success(request, 'Agendamento reaberto com sucesso.')
 
         except Exception as e:
             messages.error(request, f'Erro ao processar agendamento: {e}')
 
-    try:
-        if request.user.cargo == 'W':
-            agendamentos = Agendamento.objects.all().order_by('-data', '-horario_inicio')
-        else:
-            agendamentos = Agendamento.objects.filter(id_cliente=request.user).order_by('-data', '-horario_inicio')
-    except Exception as e:
-        messages.error(request, f'Erro ao obter agendamentos: {e}')
-        agendamentos = []
+    agendamentos = Agendamento.objects.all()
+
+    if request.user.cargo != 'W':
+        agendamentos = agendamentos.filter(id_cliente=request.user)
+
+    form = AgendamentoFilterForm(request.GET or None)
+    if form.is_valid():
+        data_inicio = form.cleaned_data.get('data_inicio')
+        data_fim = form.cleaned_data.get('data_fim')
+        status = form.cleaned_data.get('status')
+
+        if data_inicio:
+            agendamentos = agendamentos.filter(data__gte=data_inicio)
+        if data_fim:
+            agendamentos = agendamentos.filter(data__lte=data_fim)
+        if status:
+            if status == 'Pendente':
+                agendamentos = agendamentos.filter(finalizado=False)
+            elif status == 'Finalizado':
+                agendamentos = agendamentos.filter(finalizado=True)
+
+    agendamentos = agendamentos.order_by('-data', '-horario_inicio')
 
     context = {
         'agendamentos': agendamentos,
-        'form': AgendamentoFilterForm()  # Formulário para filtros
+        'form': form,
     }
     return render(request, 'listar_agendamentos.html', context)
 
 
+# @login_required
+# def detalhe_agendamento(request, agendamento_id):
+#     agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+#     return render(request, 'detalhe_agendamento.html', {'agendamento': agendamento})
+
 @login_required
 def detalhe_agendamento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-    return render(request, 'detalhe_agendamento.html', {'agendamento': agendamento})
+    cliente = get_object_or_404(Client, user=agendamento.cliente)
+    return render(request, 'detalhe_agendamento.html', {'agendamento': agendamento, 'cliente': cliente})
