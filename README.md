@@ -23,5 +23,3 @@ python3 manage.py runserver
 
 
 
-
-dessa forma não esta funcionando e não vai funcionar, estou pensando em criar uma tabela na base de dados com o intervalo de uma em uma hora referente ao dia, e a cada serviço que  é agendado esse campo na base ficar preenchido, assim se tiver um serviço com duração maior que 2 horas o sistema preenche dois campo. Dessa forma fica viavel ? 
