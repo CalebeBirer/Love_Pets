@@ -14,6 +14,9 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [ ] Fazer botao para redefinir senha 
 - [ ] Fazer coluna na tabela de vizualizacao de agendamento para inserir valor
 - [ ] Fazer tela para vizualizacao de despesas
+- [ ] Retirar colunas de (animal, observacao) da vizualizacao de agendamentos
+- [ ] Fazer com que os agendamentos feitos so mostrem na tela o periodo selecionado
+
 
 
 ## 💻 Pré-requisitos
