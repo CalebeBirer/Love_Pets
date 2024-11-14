@@ -11,11 +11,10 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas para as seguintes tarefas:
 
-- [x] Tarefa 1
-- [x] Tarefa 2
-- [x] Tarefa 3
-- [ ] Tarefa 4
-- [ ] Tarefa 5
+- [ ] Fazer botao para redefinir senha 
+- [ ] Fazer coluna na tabela de vizualizacao de agendamento para inserir valor
+- [ ] Fazer tela para vizualizacao de despesas
+
 
 ## 💻 Pré-requisitos
 
